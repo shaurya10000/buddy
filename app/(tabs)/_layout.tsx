@@ -26,6 +26,15 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="tasks"
+        options={{
+          title: 'Tasks',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'timer-sharp' : 'timer-outline'} color={color} size={24} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="reminders"
         options={{
           title: 'Reminders',
@@ -35,9 +44,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="list"
+        name="grocery"
         options={{
-          title: 'List',
+          title: 'Grocery',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'list-sharp' : 'list-outline'} color={color} size={24} />
           ),
