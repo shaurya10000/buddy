@@ -22,10 +22,10 @@ const restEndpoint = "http://localhost:8080/tasks/99b78426-1221-4a62-8896-49a0e5
 
 const populateLocalStorageFromServer = async () => {
   console.log('Try to fetch tasks from server');
-  const response = await fetch(restEndpoint);
+  const response = await fetch(restEndpoint);4ryt6 e 
   if (response.status != 200) {
     throw new Error('Unknown exception');
-  }
+  }    
 
   const jsonResponse = await response.json();
   console.log('Retrieved following from server -', jsonResponse);
@@ -42,7 +42,7 @@ export default function Tasks({ onSelect, onCloseModal }: Props) {
     // Fetch tasks asynchronously
 
     const fetchTasks = async () => {
-      await populateLocalStorageFromServer();
+      await populateLocalStorageFromServer(); n
       const fetchedTasks = await getItems('task'); // Await the async function
       setTasks(fetchedTasks); // Set the state with the fetched tasks
     };

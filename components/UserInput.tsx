@@ -83,6 +83,32 @@ const storeTuple = async (text: string, inputType?: string) => {
     goOverHistory();
 };
 
+const restEndpoint = "http://localhost:8080/task";
+
+const postTuple = async (text: string, inputType?: string) => {
+    const body: string = `{ "userId": "99b78426-1221-4a62-8896-49a0e56b2af3", "title": "${text}", "description": "Description for - ${text}"}`;
+    try {
+        console.log(`Try to post ${inputType} to server`);
+        const response = await fetch(restEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body
+        });
+
+        if (response.status != 201) {
+            throw new Error('Unknown exception');
+        }
+
+        const jsonResponse = await response.json();
+        console.log('Post response from server -', jsonResponse);
+    } catch (error) {
+        console.error('Error posting data:', error);
+        throw error; // Re-throw the error to be handled by the caller
+    }
+};
+
 const resetInputType = async (inputType?: string) => {
     let keyIndex: number = 0;
     let keyIndexKey: string = 'last-key-index';
@@ -168,6 +194,7 @@ const inputText = () => {
     const addTask = async () => {
         storeTuple(text, 'task');
         alert(`Add: ${text}`);
+        postTuple(text, 'task');
     };
 
     const setReminder = async () => {
