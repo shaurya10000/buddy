@@ -33,12 +33,20 @@
       [
         "@react-native-google-signin/google-signin",
         {
-          "iosUrlScheme": "com.googleusercontent.apps._some_id_here_"
+          "iosUrlScheme": "com.googleusercontent.apps.950384436061-6clm9me556te6akr3u30cboghn0sd1aq"
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "43c32059-9d27-4072-b775-a6ff382090cc"
+      }
     }
   }
 }

@@ -22,7 +22,7 @@ const restEndpoint = "http://localhost:8080/tasks/99b78426-1221-4a62-8896-49a0e5
 
 const populateLocalStorageFromServer = async () => {
   console.log('Try to fetch tasks from server');
-  const response = await fetch(restEndpoint);4ryt6 e 
+  const response = await fetch(restEndpoint);
   if (response.status != 200) {
     throw new Error('Unknown exception');
   }    
