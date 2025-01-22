@@ -18,7 +18,7 @@ interface Task {
   status: string;
 }
 
-const restEndpoint = "http://localhost:8080/tasks/99b78426-1221-4a62-8896-49a0e56b2af3";
+const restEndpoint = "http://10.0.0.163:8080/tasks/99b78426-1221-4a62-8896-49a0e56b2af3";
 
 const populateLocalStorageFromServer = async () => {
   console.log('Try to fetch tasks from server');
@@ -42,7 +42,7 @@ export default function Tasks({ onSelect, onCloseModal }: Props) {
     // Fetch tasks asynchronously
 
     const fetchTasks = async () => {
-      await populateLocalStorageFromServer(); n
+      await populateLocalStorageFromServer();
       const fetchedTasks = await getItems('task'); // Await the async function
       setTasks(fetchedTasks); // Set the state with the fetched tasks
     };

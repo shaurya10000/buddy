@@ -83,7 +83,7 @@ const storeTuple = async (text: string, inputType?: string) => {
     goOverHistory();
 };
 
-const restEndpoint = "http://localhost:8080/task";
+const restEndpoint = "http://10.0.0.163:8080/task";
 
 const postTuple = async (text: string, inputType?: string) => {
     const body: string = `{ "userId": "99b78426-1221-4a62-8896-49a0e56b2af3", "title": "${text}", "description": "Description for - ${text}"}`;
