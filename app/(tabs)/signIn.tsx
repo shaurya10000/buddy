@@ -5,8 +5,8 @@ import { StyleSheet } from 'react-native';
 import * as Google from "expo-auth-session/providers/google";
 import { AuthSessionResult } from 'expo-auth-session';
 import { Text, Button, TextInput, View } from 'react-native';
-import BuddyButton from '@/components/BuddyButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { populateLocalStorageFromServer } from "../upstreams/fetch";
 
 
 WebBrowser.maybeCompleteAuthSession();
@@ -61,7 +61,12 @@ export default function SignIn() {
             const user = await response.json();
             //store user information  in Asyncstorage
             await AsyncStorage.setItem("user", JSON.stringify(user));
+            await AsyncStorage.setItem("access_token_type", 'google'); // for later use
+            await AsyncStorage.setItem("access_token", token);
             setUserInfo(user);
+            
+            // similarly fetch other items
+            populateLocalStorageFromServer();
         } catch (error) {
             console.error(
                 "Failed to fetch user data:",
