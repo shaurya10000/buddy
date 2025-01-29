@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import BuddyButton from '@/components/BuddyButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CREATE_TASK_ENDPOINT } from '@/constants/Backend';
 
 const goOverHistory = async () => {
     try {
@@ -83,16 +84,23 @@ const storeTuple = async (text: string, inputType?: string) => {
     goOverHistory();
 };
 
-const restEndpoint = "http://10.0.0.163:8080/task";
+const postTuple = async (text: string, itemForUserEmail: string, inputType?: string) => {
+    if (itemForUserEmail === '') {
+        const user = await AsyncStorage.getItem('user');
+        if (user !== undefined && user !== null) {
+            itemForUserEmail = JSON.parse(user).email;
+        }
+    }
 
-const postTuple = async (text: string, inputType?: string) => {
-    const body: string = `{ "userId": "99b78426-1221-4a62-8896-49a0e56b2af3", "title": "${text}", "description": "Description for - ${text}"}`;
+    const body: string = `{ "userName": "${itemForUserEmail}", "title": "${text}", "description": "Description for - ${text}"}`;
+    const access_token = await AsyncStorage.getItem("access_token");
     try {
         console.log(`Try to post ${inputType} to server`);
-        const response = await fetch(restEndpoint, {
+        const response = await fetch(CREATE_TASK_ENDPOINT, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`,
             },
             body
         });
@@ -185,6 +193,7 @@ const resetAndStoreTuples = async (tuples: string[], inputType?: string) => {
  */
 const inputText = () => {
     const [text, setText] = useState('');
+    const [taskFor, setTaskFor] = useState('');
 
     const submitUserInputText = async () => {
         storeTuple(text);
@@ -194,7 +203,7 @@ const inputText = () => {
     const addTask = async () => {
         storeTuple(text, 'task');
         alert(`Add: ${text}`);
-        postTuple(text, 'task');
+        postTuple(text, taskFor, 'task');
     };
 
     const setReminder = async () => {
@@ -226,7 +235,14 @@ const inputText = () => {
         <View style={{ padding: 10 }}>
             <TextInput
                 style={{ height: 40, padding: 5, color: 'white' }}
-                placeholder="Type here!"
+                placeholder="Self"
+                placeholderTextColor="white"
+                onChangeText={newTaskFor => setTaskFor(newTaskFor)}
+                defaultValue={taskFor}
+            />
+            <TextInput
+                style={{ height: 40, padding: 5, color: 'white' }}
+                placeholder="Type here"
                 placeholderTextColor="white"
                 onChangeText={newText => setText(newText)}
                 defaultValue={text}

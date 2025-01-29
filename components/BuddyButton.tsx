@@ -30,7 +30,7 @@ export default function BuddyButton({ label, theme, inputType, onPress }: Props)
       <View
         style={[
           styles.buttonContainer,
-          { borderWidth: 1, borderColor: '#ffd33d', borderRadius: 8 },
+          // { borderWidth: 1, borderColor: '#ffd33d', borderRadius: 8 },
         ]}>
         <Pressable
           style={[styles.button, { backgroundColor: '#fff' }]} onPress={onPress}>
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: 120,
     height: 34,
-    marginHorizontal: 20,
+    marginHorizontal: 8,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 3,
