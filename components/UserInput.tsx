@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { TextInput, View } from 'react-native';
 import BuddyButton from '@/components/BuddyButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { CREATE_TASK_ENDPOINT } from '@/constants/Backend';
+import { SERVER_ENDPOINT } from '@/constants/Backend';
 
 const goOverHistory = async () => {
     try {
@@ -84,7 +84,7 @@ const storeTuple = async (text: string, inputType?: string) => {
     goOverHistory();
 };
 
-const postTuple = async (text: string, itemForUserEmail: string, inputType?: string) => {
+const postTask = async (text: string, itemForUserEmail: string) => {
     if (itemForUserEmail === '') {
         const user = await AsyncStorage.getItem('user');
         if (user !== undefined && user !== null) {
@@ -93,10 +93,26 @@ const postTuple = async (text: string, itemForUserEmail: string, inputType?: str
     }
 
     const body: string = `{ "userName": "${itemForUserEmail}", "title": "${text}", "description": "Description for - ${text}"}`;
+    postTuple('task', body);
+};
+
+const postReminder = async (text: string, itemForUserEmail: string, remindAtTime: string) => {
+    if (itemForUserEmail === '') {
+        const user = await AsyncStorage.getItem('user');
+        if (user !== undefined && user !== null) {
+            itemForUserEmail = JSON.parse(user).email;
+        }
+    }
+    // userName, title, description, remindAtTime, scheduleType, schedule, endAfterDate
+    const body: string = `{ "userName": "${itemForUserEmail}", "title": "${text}", "description": "Description for - ${text}", "remindAtTime": "${remindAtTime}", "scheduleType": "hours", "schedule": "12", "endAfterDate": "03/31/2025"}`;
+    postTuple('reminder', body);
+};
+
+const postTuple = async (inputType: string, body: string): Promise<void> => {
     const access_token = await AsyncStorage.getItem("access_token");
     try {
         console.log(`Try to post ${inputType} to server`);
-        const response = await fetch(CREATE_TASK_ENDPOINT, {
+        const response = await fetch(`${SERVER_ENDPOINT}${inputType}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -115,7 +131,7 @@ const postTuple = async (text: string, itemForUserEmail: string, inputType?: str
         console.error('Error posting data:', error);
         throw error; // Re-throw the error to be handled by the caller
     }
-};
+}
 
 const resetInputType = async (inputType?: string) => {
     let keyIndex: number = 0;
@@ -144,7 +160,7 @@ const resetAndStoreTuples = async (tuples: string[], inputType?: string) => {
     let keyIndex: number = 0;
     let keyIndexKey: string = 'last-key-index';
 
-    resetInputType(inputType);
+    await resetInputType(inputType);
     if (inputType !== undefined) {
         keyIndexKey = `last-key-index-${inputType}`;
     }
@@ -162,6 +178,24 @@ const resetAndStoreTuples = async (tuples: string[], inputType?: string) => {
     } catch (e) {
         // saving error
     }
+};
+
+const submitUserInputText = async (inputType: string, input: string) => {
+    storeTuple(input);
+    alert(`You entered: ${input}`);
+};
+
+const addTask = async (input: string, createFor: string) => {
+    storeTuple(input, 'task');
+    alert(`Add: ${input}`);
+    postTask(input, createFor);
+};
+
+// userName, title, description, remindAtTime, scheduleType, schedule, endAfterDate
+const addReminder = async (input: string, createFor: string, remindAtTime: string | undefined) => {
+    storeTuple(input, 'reminder');
+    alert(`Remind for: ${input}`);
+    postReminder(input, createFor, remindAtTime as string);
 };
 
 /**
@@ -195,22 +229,6 @@ const inputText = () => {
     const [text, setText] = useState('');
     const [taskFor, setTaskFor] = useState('');
 
-    const submitUserInputText = async () => {
-        storeTuple(text);
-        alert(`You entered: ${text}`);
-    };
-
-    const addTask = async () => {
-        storeTuple(text, 'task');
-        alert(`Add: ${text}`);
-        postTuple(text, taskFor, 'task');
-    };
-
-    const setReminder = async () => {
-        storeTuple(text, 'reminder');
-        alert(`Remind for: ${text}`);
-    };
-
     const addToShoppingList = async () => {
         storeTuple(text, 'shopping');
         alert(`Shop for: ${text}`);
@@ -235,7 +253,7 @@ const inputText = () => {
         <View style={{ padding: 10 }}>
             <TextInput
                 style={{ height: 40, padding: 5, color: 'white' }}
-                placeholder="Self"
+                placeholder="CreateFor"
                 placeholderTextColor="white"
                 onChangeText={newTaskFor => setTaskFor(newTaskFor)}
                 defaultValue={taskFor}
@@ -247,12 +265,12 @@ const inputText = () => {
                 onChangeText={newText => setText(newText)}
                 defaultValue={text}
             />
-            <BuddyButton theme="buddy" label="Submit" inputType='' onPress={submitUserInputText} />
-            <BuddyButton theme="buddy" label="Task" inputType='' onPress={addTask} />
-            <BuddyButton theme="buddy" label="Remind" inputType='' onPress={setReminder} />
-            <BuddyButton theme="buddy" label="Grocery" inputType='' onPress={addToGroceryList} />
-            <BuddyButton theme="buddy" label="Note" inputType='' onPress={createNote} />
-            <BuddyButton theme="buddy" label="Check-in" inputType='' onPress={setcheckIn} />
+            <BuddyButton theme="buddy" label="Submit" inputType='' input={text} onPress={submitUserInputText} />
+            <BuddyButton theme="buddy" label="Task" inputType='' input={text} onPress={addTask} />
+            <BuddyButton theme="buddy" label="Remind" inputType='' input={text} onPress={addReminder} />
+            <BuddyButton theme="buddy" label="Grocery" inputType='' input={text} onPress={addToGroceryList} />
+            <BuddyButton theme="buddy" label="Note" inputType='' input={text} onPress={createNote} />
+            <BuddyButton theme="buddy" label="Check-in" inputType='' input={text} onPress={setcheckIn} />
         </View>
     );
 };
@@ -282,5 +300,8 @@ export {
     inputText,
     getItems,
     resetAndStoreTuples as storeTuples,
-    InputObject
+    InputObject,
+    submitUserInputText,
+    addTask,
+    addReminder,
 };

@@ -1,7 +1,5 @@
-const TASKS_ENDPOINT = "http://10.0.0.163:8080/tasks";
-const CREATE_TASK_ENDPOINT = "http://10.0.0.163:8080/task";
+const SERVER_ENDPOINT = "http://10.0.0.163:8080/";
 
 export {
-    TASKS_ENDPOINT,
-    CREATE_TASK_ENDPOINT,
+    SERVER_ENDPOINT,
 }

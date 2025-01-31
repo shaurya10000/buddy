@@ -6,7 +6,7 @@ import * as Google from "expo-auth-session/providers/google";
 import { AuthSessionResult } from 'expo-auth-session';
 import { Text, Button, TextInput, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { populateLocalStorageFromServer } from "../upstreams/fetch";
+import { populateTasksInLocalStorageFromServer } from "@/app/upstreams/fetch";
 
 
 WebBrowser.maybeCompleteAuthSession();
@@ -65,7 +65,7 @@ export default function SignIn() {
             setUserInfo(user);
             
             // similarly fetch other items
-            populateLocalStorageFromServer();
+            populateTasksInLocalStorageFromServer();
         } catch (error) {
             console.error(
                 "Failed to fetch user data:",

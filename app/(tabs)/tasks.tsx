@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Platform, Pressable, FlatList, StatusBar } from 'react-native';
 import { getItems, InputObject } from '@/components/UserInput';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
-import { populateLocalStorageFromServer } from '@/app/upstreams/fetch';
+import { populateTasksInLocalStorageFromServer } from '@/app/upstreams/fetch';
+import { TextInput } from 'react-native';
+import BuddyButton from '@/components/BuddyButton';
+import { addTask } from '@/components/UserInput';
 
 type Props = {
   onSelect: () => void;
@@ -11,12 +14,14 @@ type Props = {
 
 export default function Tasks({ onSelect, onCloseModal }: Props) {
   const [tasks, setTasks] = useState<InputObject[]>([]); // State for storing tasks
+  const [newTask, submitNewTask] = useState(''); // State for accepting new tasks
+  const [taskFor, setTaskFor] = useState('');
 
   useEffect(() => {
     // Fetch tasks asynchronously
 
     const fetchTasks = async () => {
-      await populateLocalStorageFromServer();
+      await populateTasksInLocalStorageFromServer();
       const fetchedTasks = await getItems('task'); // Await the async function
       setTasks(fetchedTasks); // Set the state with the fetched tasks
     };
@@ -37,6 +42,21 @@ export default function Tasks({ onSelect, onCloseModal }: Props) {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
+        <TextInput
+          style={{ height: 40, padding: 5, color: 'white' }}
+          placeholder="CreateFor"
+          placeholderTextColor="white"
+          onChangeText={newTaskFor => setTaskFor(newTaskFor)}
+          defaultValue={taskFor}
+        />
+        <TextInput
+          style={{ height: 40, padding: 5, color: 'white' }}
+          placeholder="Type here"
+          placeholderTextColor="white"
+          onChangeText={acceptNewTask => submitNewTask(acceptNewTask)}
+          defaultValue={newTask}
+        />
+        <BuddyButton theme="buddy" label="Submit" inputType='' input={newTask} createFor={taskFor} onPress={() => addTask(newTask, taskFor)} />
         <FlatList
           data={tasks}
           renderItem={({ item }) => <Item title={item.value} />}
@@ -51,6 +71,7 @@ export default function Tasks({ onSelect, onCloseModal }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#25292e',
     marginTop: StatusBar.currentHeight || 0,
   },
   item: {
