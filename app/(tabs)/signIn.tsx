@@ -6,7 +6,7 @@ import * as Google from "expo-auth-session/providers/google";
 import { AuthSessionResult } from 'expo-auth-session';
 import { Text, Button, TextInput, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { populateTasksInLocalStorageFromServer } from "@/app/upstreams/fetch";
+import { populateTasksInLocalStorageFromServer, populateRemindersInLocalStorageFromServer, scheduleNotificationForReminders } from "@/app/upstreams/fetch";
 
 
 WebBrowser.maybeCompleteAuthSession();
@@ -29,7 +29,7 @@ export default function SignIn() {
         try {
             AsyncStorage.clear();
             const userJSON = await AsyncStorage.getItem("user");
-    
+
             if (response?.type === "success") {
                 // If the response type is "success" (assuming response is defined),
                 // call getUserInfo with the access token from the response
@@ -63,9 +63,10 @@ export default function SignIn() {
             await AsyncStorage.setItem("access_token_type", 'google'); // for later use
             await AsyncStorage.setItem("access_token", token);
             setUserInfo(user);
-            
+
             // similarly fetch other items
             populateTasksInLocalStorageFromServer();
+            populateRemindersInLocalStorageFromServer();
         } catch (error) {
             console.error(
                 "Failed to fetch user data:",

@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SERVER_ENDPOINT } from '@/constants/Backend';
 import { storeTuples } from '@/components/UserInput';
+import { scheduleNotification } from '@/app/notifications/localNotifications';
+import * as Notifications from 'expo-notifications';
 
 interface Task {
     createdAt: number;
@@ -43,6 +45,12 @@ interface Reminder {
     remindAtTime: string;
 };
 
+// reuse taskId as triggerId
+const scheduleNotificationForReminders = async (taskId: string, title: string, description: string) => {
+    console.log("Schedule notification");
+    scheduleNotification(taskId, title, description);
+};
+
 const populateRemindersInLocalStorageFromServer = async () => {
     console.log('Try to fetch reminders from server');
     const access_token = await AsyncStorage.getItem("access_token");
@@ -58,7 +66,12 @@ const populateRemindersInLocalStorageFromServer = async () => {
     const jsonResponse = await response.json();
     console.log('Retrieved following from server -', jsonResponse);
     const array: Reminder[] = jsonResponse.reminders;
-    const titles = array.map(item => { return JSON.stringify({ "title": item.title, "remindAtTime": item.remindAtTime }) });
+
+    await Notifications.cancelAllScheduledNotificationsAsync();
+    
+    const titles = array.map(item => {
+        scheduleNotificationForReminders(item.taskId, item.title, item.description);
+        return JSON.stringify({ "title": item.title, "remindAtTime": item.remindAtTime }) });
 
     await storeTuples(titles, 'reminder');
 };
@@ -66,4 +79,5 @@ const populateRemindersInLocalStorageFromServer = async () => {
 export {
     populateTasksInLocalStorageFromServer,
     populateRemindersInLocalStorageFromServer,
+    scheduleNotificationForReminders,
 }
