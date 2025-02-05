@@ -14,6 +14,7 @@ type Props = {
 
 export default function Tasks({ onSelect, onCloseModal }: Props) {
   const [tasks, setTasks] = useState<InputObject[]>([]); // State for storing tasks
+  const [pendingAcceptanceTasks, setPendingAcceptanceTasks] = useState<InputObject[]>([]); // State for tasks pending for acceptance
   const [newTask, submitNewTask] = useState(''); // State for accepting new tasks
   const [taskFor, setTaskFor] = useState('');
 
@@ -23,7 +24,9 @@ export default function Tasks({ onSelect, onCloseModal }: Props) {
     const fetchTasks = async () => {
       await populateTasksInLocalStorageFromServer();
       const fetchedTasks = await getItems('task'); // Await the async function
+      const pendingAcceptanceFetchedTasks = await getItems('pendingAcceptanceTask');
       setTasks(fetchedTasks); // Set the state with the fetched tasks
+      setPendingAcceptanceTasks(pendingAcceptanceFetchedTasks); // Set the state with the fetched tasks
     };
 
     fetchTasks(); // Call the async function when the component mounts
@@ -59,6 +62,12 @@ export default function Tasks({ onSelect, onCloseModal }: Props) {
         <BuddyButton theme="buddy" label="Submit" inputType='' input={newTask} createFor={taskFor} onPress={() => addTask(newTask, taskFor)} />
         <FlatList
           data={tasks}
+          renderItem={({ item }) => <Item title={item.value} />}
+          keyExtractor={item => item.key}
+        />
+        <Text style={{ height: 40, padding: 5, color: 'white' }}> Pending Acceptance Tasks</Text>
+        <FlatList
+          data={pendingAcceptanceTasks}
           renderItem={({ item }) => <Item title={item.value} />}
           keyExtractor={item => item.key}
         />

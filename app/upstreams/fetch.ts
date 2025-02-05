@@ -3,13 +3,14 @@ import { SERVER_ENDPOINT } from '@/constants/Backend';
 import { storeTuples } from '@/components/UserInput';
 import { scheduleNotification } from '@/app/notifications/localNotifications';
 import * as Notifications from 'expo-notifications';
+import { Platform } from 'react-native';
 
 interface Task {
     createdAt: number;
     createdBy: string;
     description: string;
     title: string;
-    userId: string;
+    userName: string;
     taskId: string;
     status: string;
 };
@@ -28,10 +29,13 @@ const populateTasksInLocalStorageFromServer = async () => {
 
     const jsonResponse = await response.json();
     console.log('Retrieved following from server -', jsonResponse);
-    const tasksArray: Task[] = jsonResponse.tasks;
-    const titles = tasksArray.map(task => task.title);
 
+    const tasksArray: Task[] = jsonResponse.tasks;
+    const titles = tasksArray.filter(task => task.createdBy === task.userName).map(task => task.title);
     await storeTuples(titles, 'task');
+
+    const pendingTasksTitles = tasksArray.filter(task => task.createdBy !== task.userName).map(task => task.title);
+    await storeTuples(pendingTasksTitles, 'pendingAcceptanceTask');
 };
 
 interface Reminder {
@@ -67,11 +71,20 @@ const populateRemindersInLocalStorageFromServer = async () => {
     console.log('Retrieved following from server -', jsonResponse);
     const array: Reminder[] = jsonResponse.reminders;
 
-    await Notifications.cancelAllScheduledNotificationsAsync();
-    
-    const titles = array.map(item => {
-        scheduleNotificationForReminders(item.taskId, item.title, item.description);
-        return JSON.stringify({ "title": item.title, "remindAtTime": item.remindAtTime }) });
+    // https://github.com/expo/expo/issues/18822
+    let titles;
+    if (Platform.OS === "web") {
+        console.log("Support for notifications in web is not available in Expo");
+        titles = array.map(item => {
+            return JSON.stringify({ "title": item.title, "remindAtTime": item.remindAtTime })
+        });
+    } else {
+        await Notifications.cancelAllScheduledNotificationsAsync();
+        titles = array.map(item => {
+            scheduleNotificationForReminders(item.taskId, item.title, item.description);
+            return JSON.stringify({ "title": item.title, "remindAtTime": item.remindAtTime })
+        });
+    }
 
     await storeTuples(titles, 'reminder');
 };
