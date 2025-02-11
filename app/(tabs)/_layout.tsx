@@ -1,7 +1,24 @@
 import { Tabs } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useEffect } from "react";
+import { useAsyncStorage } from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 
 export default function TabLayout() {
+  const { getItem } = useAsyncStorage("token");
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = await getItem();
+      if (!token) {
+        // Redirect to sign-in if no token is found
+        router.replace("/sign-in");
+      }
+    };
+
+    checkAuth();
+  }, []);
+
   return (
     <Tabs
       screenOptions={{
@@ -16,15 +33,15 @@ export default function TabLayout() {
         },
       }}
     >
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="signIn"
         options={{
-          title: 'Sign-In',
+          title: '',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} />
           ),
         }}
-      />
+      /> */}
       <Tabs.Screen
         name="index"
         options={{

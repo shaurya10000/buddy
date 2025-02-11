@@ -81,10 +81,10 @@ export default function SignIn() {
 
     return (
         <GestureHandlerRootView style={styles.container}>
-            <View style={{ padding: 10 }}>
-                {/* <BuddyButton theme="buddy" label="sign in with google" inputType='' onPress={submitUserInputText} /> */}
-                <Text>{JSON.stringify(userInfo, null, 2)}</Text>
-                <Button title="sign in with google" onPress={() => { promptAsync() }} />
+            <View style={{ padding: 10, flex: 1, justifyContent: 'center' }}>
+                <View style={{}}>
+                    <Button title="sign in with google" onPress={() => { promptAsync() }} />
+                </View>
             </View>
         </GestureHandlerRootView>
     );
