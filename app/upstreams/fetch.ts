@@ -4,7 +4,7 @@ import { storeTuples } from '@/components/UserInput';
 import { scheduleNotification } from '@/app/notifications/localNotifications';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
-
+import { storageKeys } from '@/config/storageKeys';
 interface Task {
     createdAt: number;
     createdBy: string;
@@ -17,11 +17,11 @@ interface Task {
 
 const populateTasksInLocalStorageFromServer = async () => {
     console.log('Try to fetch tasks from server');
-    const access_token = await AsyncStorage.getItem("access_token");
+    const accessToken = await AsyncStorage.getItem(storageKeys.token);
 
     const response = await fetch(`${SERVER_ENDPOINT}tasks`,
         {
-            headers: { Authorization: `Bearer ${access_token}` },
+            headers: { Authorization: `Bearer ${accessToken}` },
         });
     if (response.status != 200) {
         throw new Error('Unknown exception');
@@ -57,11 +57,11 @@ const scheduleNotificationForReminders = async (taskId: string, title: string, d
 
 const populateRemindersInLocalStorageFromServer = async () => {
     console.log('Try to fetch reminders from server');
-    const access_token = await AsyncStorage.getItem("access_token");
+    const accessToken = await AsyncStorage.getItem(storageKeys.token);
 
     const response = await fetch(`${SERVER_ENDPOINT}reminders`,
         {
-            headers: { Authorization: `Bearer ${access_token}` },
+            headers: { Authorization: `Bearer ${accessToken}` },
         });
     if (response.status != 200) {
         throw new Error('Unknown exception');

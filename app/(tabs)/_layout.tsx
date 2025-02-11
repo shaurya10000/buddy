@@ -3,9 +3,10 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useEffect } from "react";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
+import { storageKeys } from '@/config/storageKeys';
 
 export default function TabLayout() {
-  const { getItem } = useAsyncStorage("token");
+  const { getItem } = useAsyncStorage(storageKeys.token);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -33,15 +34,6 @@ export default function TabLayout() {
         },
       }}
     >
-      {/* <Tabs.Screen
-        name="signIn"
-        options={{
-          title: '',
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} />
-          ),
-        }}
-      /> */}
       <Tabs.Screen
         name="index"
         options={{

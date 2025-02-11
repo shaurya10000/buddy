@@ -3,6 +3,7 @@ import { TextInput, View } from 'react-native';
 import BuddyButton from '@/components/BuddyButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SERVER_ENDPOINT } from '@/constants/Backend';
+import { storageKeys } from '@/config/storageKeys';
 
 const goOverHistory = async () => {
     try {
@@ -109,14 +110,14 @@ const postReminder = async (text: string, itemForUserEmail: string, remindAtTime
 };
 
 const postTuple = async (inputType: string, body: string): Promise<void> => {
-    const access_token = await AsyncStorage.getItem("access_token");
+    const accessToken = await AsyncStorage.getItem(storageKeys.token);
     try {
         console.log(`Try to post ${inputType} to server`);
         const response = await fetch(`${SERVER_ENDPOINT}${inputType}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${access_token}`,
+                'Authorization': `Bearer ${accessToken}`,
             },
             body
         });

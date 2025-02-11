@@ -7,7 +7,8 @@ import { AuthSessionResult } from 'expo-auth-session';
 import { Text, Button, TextInput, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { populateTasksInLocalStorageFromServer, populateRemindersInLocalStorageFromServer, scheduleNotificationForReminders } from "@/app/upstreams/fetch";
-
+import { router } from "expo-router";
+import { storageKeys } from '@/config/storageKeys';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -48,10 +49,9 @@ export default function SignIn() {
     const getUserInfo = async (token: string | undefined) => {
         //absent token
         if (!token) return;
-        //present token
-        let response: Response | null = null;
+        
         try {
-            response = await fetch(
+            const response = await fetch(
                 "https://www.googleapis.com/userinfo/v2/me",
                 {
                     headers: { Authorization: `Bearer ${token}` },
@@ -59,14 +59,18 @@ export default function SignIn() {
             );
             const user = await response.json();
             //store user information  in Asyncstorage
-            await AsyncStorage.setItem("user", JSON.stringify(user));
-            await AsyncStorage.setItem("access_token_type", 'google'); // for later use
-            await AsyncStorage.setItem("access_token", token);
+            await AsyncStorage.setItem(storageKeys.user, JSON.stringify(user));
+            await AsyncStorage.setItem(storageKeys.accessTokenType, 'google'); // for later enhancements
+            await AsyncStorage.setItem(storageKeys.token, token);
             setUserInfo(user);
 
-            // similarly fetch other items
-            populateTasksInLocalStorageFromServer();
-            populateRemindersInLocalStorageFromServer();
+            // Fetch other items
+            await populateTasksInLocalStorageFromServer();
+            await populateRemindersInLocalStorageFromServer();
+
+            // Redirect to tabs after successful authentication
+            router.replace("/(tabs)");
+            
         } catch (error) {
             console.error(
                 "Failed to fetch user data:",

@@ -6,6 +6,7 @@ import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { useState, useEffect } from "react";
 
 export default function RootLayout() {
+  // Show only sign in screen if no token is found in the app storage
   const { getItem } = useAsyncStorage("token");
   const [isSignedIn, setIsSignedIn] = useState(false);
 
@@ -18,8 +19,8 @@ export default function RootLayout() {
     checkToken();
   }, []);
 
-  // If not signed in, only show sign-in screen
   if (!isSignedIn) {
+    console.log("isSignedIn", isSignedIn);
     return (
       <>
         <Stack>
@@ -29,8 +30,7 @@ export default function RootLayout() {
       </>
     );
   }
-
-  // If signed in, show tabs and other screens
+  console.log("isSignedIn", isSignedIn);
   return (
     <>
       <Stack>
