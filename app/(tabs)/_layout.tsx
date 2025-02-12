@@ -37,7 +37,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          tabBarLabel: 'Home',
+          title:'',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} />
           ),
@@ -46,7 +47,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="tasks"
         options={{
-          title: 'Tasks',
+          tabBarLabel: 'Tasks',
+          title:'',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'timer-sharp' : 'timer-outline'} color={color} size={24} />
           ),
@@ -55,7 +57,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="reminders"
         options={{
-          title: 'Reminders',
+          tabBarLabel: 'Reminders',
+          title:'',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'timer-sharp' : 'timer-outline'} color={color} size={24} />
           ),
@@ -64,7 +67,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="grocery"
         options={{
-          title: 'Grocery',
+          tabBarLabel: 'Grocery',
+          title:'',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'list-sharp' : 'list-outline'} color={color} size={24} />
           ),
@@ -73,7 +77,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="about"
         options={{
-          title: 'About',
+          tabBarLabel: 'About',
+          title:'',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24} />
           ),
