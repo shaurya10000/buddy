@@ -20,7 +20,6 @@ export default function RootLayout() {
   }, []);
 
   if (!isSignedIn) {
-    console.log("isSignedIn", isSignedIn);
     return (
       <>
         <Stack>
@@ -30,12 +29,11 @@ export default function RootLayout() {
       </>
     );
   }
-  console.log("isSignedIn", isSignedIn);
   return (
     <>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" options={{ presentation: 'modal' }} />
+        {/* <Stack.Screen name="(tabs1)" options={{ headerShown: false }} />
+        <Stack.Screen name="+not-found" options={{ presentation: 'modal' }} /> */}
       </Stack>
       <StatusBar style="light" />
     </>
