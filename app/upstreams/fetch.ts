@@ -23,6 +23,10 @@ const populateTasksInLocalStorageFromServer = async () => {
         {
             headers: { Authorization: `Bearer ${accessToken}` },
         });
+    if (response.status === 401) {
+        throw new Error('Unauthorized');
+    }
+
     if (response.status != 200) {
         throw new Error('Unknown exception');
     }
