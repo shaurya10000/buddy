@@ -9,6 +9,7 @@ import { SERVER_ENDPOINT } from '@/constants/Backend';
 import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { storageKeys } from '@/config/storageKeys';
+import { Task } from '@/types/Task';
 
 type Props = {
   onSelect: () => void;
@@ -16,21 +17,20 @@ type Props = {
 };
 
 export default function Tasks({ onSelect, onCloseModal }: Props) {
-  const [tasks, setTasks] = useState<InputObject[]>([]); // State for storing tasks
-  const [pendingAcceptanceTasks, setPendingAcceptanceTasks] = useState<InputObject[]>([]); // State for tasks pending for acceptance
-  const [newTask, submitNewTask] = useState(''); // State for accepting new tasks
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [pendingAcceptanceTasks, setPendingAcceptanceTasks] = useState<Task[]>([]);
+  const [newTask, submitNewTask] = useState('');
   const [taskFor, setTaskFor] = useState('');
 
   useEffect(() => {
-    // Fetch tasks asynchronously
-
     const fetchTasks = async () => {
       try {
         await populateTasksInLocalStorageFromServer();
         const fetchedTasks = await getItems('task'); // Await the async function
         const pendingAcceptanceFetchedTasks = await getItems('pendingAcceptanceTask');
-        setTasks(fetchedTasks); // Set the state with the fetched tasks
-        setPendingAcceptanceTasks(pendingAcceptanceFetchedTasks); // Set the state with the fetched tasks
+        setTasks(fetchedTasks.map(task => task.value)); // Set the state with the fetched tasks
+        console.log('Fetched tasks:', fetchedTasks);
+        setPendingAcceptanceTasks(pendingAcceptanceFetchedTasks.map(task => task.value)); // Set the state with the fetched tasks
       } catch (error) {
         console.error('Error fetching tasks:', error);
         if (error instanceof Error && error.message === 'Unauthorized') {
@@ -41,7 +41,6 @@ export default function Tasks({ onSelect, onCloseModal }: Props) {
 
     fetchTasks(); // Call the async function when the component mounts
   }, []); // Don't provide dependency array to ensure that useEffect is called every time the component renders
-  // }, []); // Empty dependency array ensures this effect runs only once (on mount)
 
   const handleAccept = async (taskId: string) => {
     try {
@@ -163,14 +162,14 @@ export default function Tasks({ onSelect, onCloseModal }: Props) {
         <BuddyButton theme="buddy" label="Submit" inputType='' input={newTask} createFor={taskFor} onPress={() => addTask(newTask, taskFor)} />
         <FlatList
           data={tasks}
-          renderItem={({ item }) => <Item title={item.value} id={item.key} isPending={false} />}
-          keyExtractor={item => item.key}
+          renderItem={({ item }) => <Item title={item.title} id={item.taskId} isPending={false} />}
+          keyExtractor={item => item.taskId}
         />
         <Text style={{ height: 40, padding: 5, color: 'white' }}> Pending Acceptance Tasks</Text>
         <FlatList
           data={pendingAcceptanceTasks}
-          renderItem={({ item }) => <Item title={item.value} id={item.key} isPending={true} />}
-          keyExtractor={item => item.key}
+          renderItem={({ item }) => <Item title={item.title} id={item.taskId} isPending={true} />}
+          keyExtractor={item => item.taskId}
         />
       </SafeAreaView>
     </SafeAreaProvider>

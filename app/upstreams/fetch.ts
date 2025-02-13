@@ -5,26 +5,25 @@ import { scheduleNotification } from '@/app/notifications/localNotifications';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import { storageKeys } from '@/config/storageKeys';
-interface Task {
-    createdAt: number;
-    createdBy: string;
-    description: string;
-    title: string;
-    userName: string;
-    taskId: string;
-    status: string;
-};
+import { Task } from '@/types/Task';
 
-const populateTasksInLocalStorageFromServer = async () => {
+// Function to fetch tasks from the server and save them locally
+export async function populateTasksInLocalStorageFromServer() {
+  try {
     console.log('Try to fetch tasks from server');
     const accessToken = await AsyncStorage.getItem(storageKeys.token);
-
-    const response = await fetch(`${SERVER_ENDPOINT}tasks`,
-        {
-            headers: { Authorization: `Bearer ${accessToken}` },
-        });
+    const response = await fetch(`${SERVER_ENDPOINT}tasks`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
     if (response.status === 401) {
         throw new Error('Unauthorized');
+    }
+    if (!response.ok) {
+      throw new Error('Failed to fetch tasks');
     }
 
     if (response.status != 200) {
@@ -35,12 +34,15 @@ const populateTasksInLocalStorageFromServer = async () => {
     console.log('Retrieved following from server -', jsonResponse);
 
     const tasksArray: Task[] = jsonResponse.tasks;
-    const titles = tasksArray.filter(task => task.createdBy === task.userName).map(task => task.title);
-    await storeTuples(titles, 'task');
+    const tasks = tasksArray.filter(task => task.createdBy === task.userName).map(task => JSON.stringify(task));
+    await storeTuples(tasks, 'task');
 
-    const pendingTasksTitles = tasksArray.filter(task => task.createdBy !== task.userName).map(task => task.title);
-    await storeTuples(pendingTasksTitles, 'pendingAcceptanceTask');
-};
+    const pendingTasks = tasksArray.filter(task => task.createdBy !== task.userName).map(task => JSON.stringify(task));
+    await storeTuples(pendingTasks, 'pendingAcceptanceTask');
+  } catch (error) {
+    console.error('Error populating tasks:', error);
+  }
+}
 
 interface Reminder {
     createdAt: number;

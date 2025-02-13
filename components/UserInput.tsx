@@ -4,6 +4,7 @@ import BuddyButton from '@/components/BuddyButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SERVER_ENDPOINT } from '@/constants/Backend';
 import { storageKeys } from '@/config/storageKeys';
+import { Task } from '@/types/Task';
 
 const goOverHistory = async () => {
     try {
@@ -30,7 +31,7 @@ type InputObject = {
     value: string;
 };
 
-const getItems = async (itemType: string) => {
+const getItems = async (itemType: string): Promise<Task[]> => {
     const items: InputObject[] = [];
 
     console.log(`Trying to load ${itemType}s`);
@@ -47,7 +48,7 @@ const getItems = async (itemType: string) => {
                 const key = `${itemType}-${i}`
                 value = await AsyncStorage.getItem(key) ?? '#ERROR';
                 console.log(`${itemType}-${i} = '${value}'`);
-                items.push({ key, value });
+                items.push({ key, value: JSON.parse(value) });
             }
         }
 
@@ -95,6 +96,7 @@ const postTask = async (text: string, itemForUserEmail: string) => {
 
     const body: string = `{ "userName": "${itemForUserEmail}", "title": "${text}", "description": "Description for - ${text}"}`;
     postTuple('task', body);
+    // storeTuple(input, 'task');
 };
 
 const postReminder = async (text: string, itemForUserEmail: string, remindAtTime: string) => {
@@ -187,8 +189,7 @@ const submitUserInputText = async (inputType: string, input: string) => {
 };
 
 const addTask = async (input: string, createFor: string) => {
-    storeTuple(input, 'task');
-    alert(`Add: ${input}`);
+    // alert(`Add: ${input}`);
     postTask(input, createFor);
 };
 
