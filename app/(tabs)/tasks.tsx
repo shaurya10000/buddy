@@ -42,9 +42,11 @@ export default function Tasks({ onSelect, onCloseModal }: Props) {
     fetchTasks(); // Call the async function when the component mounts
   }, []); // Don't provide dependency array to ensure that useEffect is called every time the component renders
 
-  const handleAccept = async (taskId: string) => {
+  const handleAccept = async (taskId: string, createdAt: number) => {
     try {
-      const accessToken = await AsyncStorage.getItem(storageKeys.token);
+      const tokenData = await AsyncStorage.getItem(storageKeys.token);
+      const accessToken = JSON.parse(tokenData || '{}').token;
+
             // Post the acceptance to the server
       await fetch(`${SERVER_ENDPOINT}tasks/update`, {
         method: 'POST',
@@ -52,7 +54,7 @@ export default function Tasks({ onSelect, onCloseModal }: Props) {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({ taskIds: [taskId], status: 'ACCEPTED', note: '' }),
+        body: JSON.stringify({'tasks' : [{'taskId': taskId, 'status': 'ACCEPTED', 'note': '', 'createdAt': createdAt}]}),
       });
       // Update the local state or refetch tasks if needed
     } catch (error) {
@@ -60,9 +62,10 @@ export default function Tasks({ onSelect, onCloseModal }: Props) {
     }
   };
 
-  const handleReject = async (taskId: string) => {
+  const handleReject = async (taskId: string, createdAt: number) => {
     try {
-      const accessToken = await AsyncStorage.getItem(storageKeys.token);
+      const tokenData = await AsyncStorage.getItem(storageKeys.token);
+      const accessToken = JSON.parse(tokenData || '{}').token;
       // Post the rejection to the server
       await fetch(`${SERVER_ENDPOINT}tasks/update`, {
         method: 'POST',
@@ -70,7 +73,7 @@ export default function Tasks({ onSelect, onCloseModal }: Props) {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({ taskIds: [taskId], status: 'REJECTED', note: '' }),
+        body: JSON.stringify({'tasks' : [{'taskId': taskId, 'status': 'REJECTED', 'note': '', 'createdAt': createdAt}]}),
       });
       // Update the local state or refetch tasks if needed
     } catch (error) {
@@ -78,16 +81,17 @@ export default function Tasks({ onSelect, onCloseModal }: Props) {
     }
   };
 
-  const handleDelete = async (taskId: string) => {
+  const handleDelete = async (taskId: string, createdAt: number) => {
     try {
-      const accessToken = await AsyncStorage.getItem(storageKeys.token);
+      const tokenData = await AsyncStorage.getItem(storageKeys.token);
+      const accessToken = JSON.parse(tokenData || '{}').token;
       await fetch(`${SERVER_ENDPOINT}tasks/delete`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({ taskIds: [taskId] }),
+        body: JSON.stringify({'tasks' : [{'taskId': taskId, 'createdAt': createdAt}]}),
       });
       // Optionally update local state or refetch tasks
     } catch (error) {
@@ -95,16 +99,17 @@ export default function Tasks({ onSelect, onCloseModal }: Props) {
     }
   };
 
-  const handleDone = async (taskId: string) => {
+  const handleDone = async (taskId: string, createdAt: number) => {
     try {
-      const accessToken = await AsyncStorage.getItem(storageKeys.token);
+      const tokenData = await AsyncStorage.getItem(storageKeys.token);
+      const accessToken = JSON.parse(tokenData || '{}').token;
       await fetch(`${SERVER_ENDPOINT}tasks/update`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({ taskIds: [taskId], status: 'DONE', note: '' }),
+        body: JSON.stringify({'tasks' : [{'taskId': taskId, 'status': 'DONE', 'note': '', 'createdAt': createdAt}]}),
       });
       // Optionally update local state or refetch tasks
     } catch (error) {
@@ -112,29 +117,29 @@ export default function Tasks({ onSelect, onCloseModal }: Props) {
     }
   };
 
-  type ItemProps = { title: string; id: string; isPending: boolean };
+  type ItemProps = { title: string; id: string; isPending: boolean; createdAt: number };
 
-  const Item = ({ title, id, isPending }: ItemProps) => (
+  const Item = ({ title, id, isPending, createdAt }: ItemProps) => (
     <View style={styles.item}>
       <Text style={styles.title}>{title}</Text>
       <View style={styles.buttons}>
         {!isPending && (
           <>
             <View style={styles.buttonContainer}>
-              <Button title="Done" onPress={() => handleDone(id)} color="darkgreen" />
+              <Button title="Done" onPress={() => handleDone(id, createdAt)} color="darkgreen" />
             </View>
             <View style={styles.buttonContainer}>
-              <Button title="Delete" onPress={() => handleDelete(id)} color="darkred" />
+              <Button title="Delete" onPress={() => handleDelete(id, createdAt)} color="darkred" />
             </View>
           </>
         )}
         {isPending && (
           <>
             <View style={styles.buttonContainer}>
-              <Button title="Accept" onPress={() => handleAccept(id)} color="darkgreen" />
+              <Button title="Accept" onPress={() => handleAccept(id, createdAt)} color="darkgreen" />
             </View>
             <View style={styles.buttonContainer}>
-              <Button title="Reject" onPress={() => handleReject(id)} color="darkred" />
+              <Button title="Reject" onPress={() => handleReject(id, createdAt)} color="darkred" />
             </View>
           </>
         )}
@@ -162,13 +167,13 @@ export default function Tasks({ onSelect, onCloseModal }: Props) {
         <BuddyButton theme="buddy" label="Submit" inputType='' input={newTask} createFor={taskFor} onPress={() => addTask(newTask, taskFor)} />
         <FlatList
           data={tasks}
-          renderItem={({ item }) => <Item title={item.title} id={item.taskId} isPending={false} />}
+          renderItem={({ item }) => <Item title={item.title} id={item.taskId} isPending={false} createdAt={item.createdAt} />}
           keyExtractor={item => item.taskId}
         />
-        <Text style={{ height: 40, padding: 5, color: 'white' }}> Pending Acceptance Tasks</Text>
+        <Text style={{ height: 40, padding: 5, color: 'white' }}> Pending Acceptance</Text>
         <FlatList
           data={pendingAcceptanceTasks}
-          renderItem={({ item }) => <Item title={item.title} id={item.taskId} isPending={true} />}
+          renderItem={({ item }) => <Item title={item.title} id={item.taskId} isPending={true} createdAt={item.createdAt} />}
           keyExtractor={item => item.taskId}
         />
       </SafeAreaView>

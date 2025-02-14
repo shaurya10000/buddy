@@ -8,10 +8,11 @@ import { storageKeys } from '@/config/storageKeys';
 import { Task } from '@/types/Task';
 
 // Function to fetch tasks from the server and save them locally
-export async function populateTasksInLocalStorageFromServer() {
+async function populateTasksInLocalStorageFromServer() {
   try {
     console.log('Try to fetch tasks from server');
-    const accessToken = await AsyncStorage.getItem(storageKeys.token);
+    const tokenData = await AsyncStorage.getItem(storageKeys.token);
+    const accessToken = JSON.parse(tokenData || '{}').token;
     const response = await fetch(`${SERVER_ENDPOINT}tasks`, {
       method: 'GET',
       headers: {
@@ -63,7 +64,8 @@ const scheduleNotificationForReminders = async (taskId: string, title: string, d
 
 const populateRemindersInLocalStorageFromServer = async () => {
     console.log('Try to fetch reminders from server');
-    const accessToken = await AsyncStorage.getItem(storageKeys.token);
+    const tokenData = await AsyncStorage.getItem(storageKeys.token);
+    const accessToken = JSON.parse(tokenData || '{}').token;
 
     const response = await fetch(`${SERVER_ENDPOINT}reminders`,
         {

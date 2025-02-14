@@ -112,7 +112,8 @@ const postReminder = async (text: string, itemForUserEmail: string, remindAtTime
 };
 
 const postTuple = async (inputType: string, body: string): Promise<void> => {
-    const accessToken = await AsyncStorage.getItem(storageKeys.token);
+    const tokenData = await AsyncStorage.getItem(storageKeys.token);
+    const accessToken = JSON.parse(tokenData || '{}').token;
     try {
         console.log(`Try to post ${inputType} to server`);
         const response = await fetch(`${SERVER_ENDPOINT}${inputType}`, {

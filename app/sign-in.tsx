@@ -59,9 +59,14 @@ export default function SignIn() {
             );
             const user = await response.json();
             //store user information  in Asyncstorage
+            const tokenExpiry = new Date().getTime() + 3600 * 1000; // Assuming token expires in 1 hour
+            const tokenWithExpiry = {
+                token: token,
+                expiry: tokenExpiry
+            };
+            await AsyncStorage.setItem(storageKeys.token, JSON.stringify(tokenWithExpiry));
             await AsyncStorage.setItem(storageKeys.user, JSON.stringify(user));
             await AsyncStorage.setItem(storageKeys.accessTokenType, 'google'); // for later enhancements
-            await AsyncStorage.setItem(storageKeys.token, token);
             setUserInfo(user);
 
             // Fetch other items

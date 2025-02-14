@@ -6,13 +6,15 @@ import { router } from "expo-router";
 import { storageKeys } from '@/config/storageKeys';
 
 export default function TabLayout() {
-  const { getItem } = useAsyncStorage(storageKeys.token);
+  const { getItem: getToken } = useAsyncStorage(storageKeys.token);
 
   useEffect(() => {
     const checkAuth = async () => {
-      const token = await getItem();
-      if (!token) {
+      const token = await getToken();
+      const tokenData = JSON.parse(token || '{}');
+      if (!tokenData.token || tokenData.expiry < Date.now()) {
         // Redirect to sign-in if no token is found
+        console.log('Redirecting to sign-in');
         router.replace("/sign-in");
       }
     };
