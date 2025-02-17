@@ -6,6 +6,7 @@ import { TextInput } from 'react-native';
 import BuddyButton from '@/components/BuddyButton';
 import { addReminder } from '@/components/UserInput';
 import { populateRemindersInLocalStorageFromServer } from '@/app/upstreams/fetch';
+import { ReminderScheduler } from '@/components/ReminderScheduler';
 
 type Props = {
   onSelect: () => void;
@@ -55,17 +56,11 @@ export default function Reminders({ onSelect, onCloseModal }: Props) {
           onChangeText={acceptNewReminder => submitNewReminder(acceptNewReminder)}
           defaultValue={newReminder}
         />
-        <TextInput
-          style={{ height: 40, padding: 5, color: 'white' }}
-          placeholder="Time"
-          placeholderTextColor="white"
-          onChangeText={acceptNewRemindAtTime => setRemindAtTime(acceptNewRemindAtTime)}
-          defaultValue={remindAtTime}
-        />
+        <ReminderScheduler />
         <BuddyButton theme="buddy" label="Submit" inputType='' input={newReminder} createFor={reminderFor} remindAtTime={remindAtTime} onPress={() => addReminder(newReminder, reminderFor, remindAtTime)} />
         <FlatList
           data={reminders}
-          renderItem={({ item }) => <Item title={item.value} />}
+          renderItem={({ item }) => <Item title={JSON.stringify(item.value)} />}
           keyExtractor={item => item.key}
         />
       </SafeAreaView>
