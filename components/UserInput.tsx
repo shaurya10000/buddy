@@ -31,7 +31,7 @@ type InputObject = {
     value: string;
 };
 
-const getItems = async (itemType: string): Promise<Task[]> => {
+const getItems = async (itemType: string): Promise<InputObject[]> => {
     const items: InputObject[] = [];
 
     console.log(`Trying to load ${itemType}s`);

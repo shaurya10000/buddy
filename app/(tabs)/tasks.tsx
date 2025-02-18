@@ -28,9 +28,9 @@ export default function Tasks({ onSelect, onCloseModal }: Props) {
         await populateTasksInLocalStorageFromServer();
         const fetchedTasks = await getItems('task'); // Await the async function
         const pendingAcceptanceFetchedTasks = await getItems('pendingAcceptanceTask');
-        setTasks(fetchedTasks.map(task => task.value)); // Set the state with the fetched tasks
+        setTasks(fetchedTasks.map(task => JSON.parse(task.value))); // Set the state with the fetched tasks
         console.log('Fetched tasks:', fetchedTasks);
-        setPendingAcceptanceTasks(pendingAcceptanceFetchedTasks.map(task => task.value)); // Set the state with the fetched tasks
+        setPendingAcceptanceTasks(pendingAcceptanceFetchedTasks.map(task => JSON.parse(task.value))); // Set the state with the fetched tasks
       } catch (error) {
         console.error('Error fetching tasks:', error);
         if (error instanceof Error && error.message === 'Unauthorized') {

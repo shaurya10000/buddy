@@ -13,7 +13,11 @@ export default function RootLayout() {
   useEffect(() => {
     const checkToken = async () => {
       const storedToken = await getItem();
-      setIsSignedIn(!!storedToken);
+      const tokenData = JSON.parse(storedToken || '{}');
+      if (!tokenData.token || tokenData.expiry < Date.now()) {
+        return;
+      }
+      setIsSignedIn(true);
     };
     
     checkToken();
