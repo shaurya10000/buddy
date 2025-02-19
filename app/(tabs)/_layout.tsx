@@ -2,20 +2,32 @@ import { Tabs } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useEffect } from "react";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from "expo-router";
 import { storageKeys } from '@/config/storageKeys';
 
 export default function TabLayout() {
-  const { getItem: getToken } = useAsyncStorage(storageKeys.token);
+  // const { getItem: getToken } = useAsyncStorage(storageKeys.token);
+  // const userJSON = await AsyncStorage.getItem(storageKeys.token);
 
   useEffect(() => {
     const checkAuth = async () => {
-      const token = await getToken();
-      const tokenData = JSON.parse(token || '{}');
-      if (!tokenData.token || tokenData.expiry < Date.now()) {
-        // Redirect to sign-in if no token is found
+      const token = await AsyncStorage.getItem(storageKeys.token);
+      console.log("user-token", token);
+      try {
+        const tokenData = JSON.parse(token || '{}');
+        if (!tokenData.token || tokenData.expiry < Date.now()) {
+          // Redirect to sign-in if no token is found
+          console.log('Redirecting to sign-in');
+          router.replace("/sign-in");
+        }
+      } catch (error) {
+        console.error("Error parsing token", error);
+        await AsyncStorage.removeItem(storageKeys.token);
+        console.log("token removed");
         console.log('Redirecting to sign-in');
         router.replace("/sign-in");
+        return;
       }
     };
 

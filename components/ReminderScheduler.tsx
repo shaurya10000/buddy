@@ -15,13 +15,18 @@ const daysOfWeek = [
 
 const ReminderScheduler = () => {
   const [date, setDate] = useState(String);
+  const [dateMobile, setDateMobile] = useState(new Date());
   const [time, setTime] = useState(String);
+  const [timeMobile, setTimeMobile] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showEndDatePicker, setShowEndDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [isRepetitive, setIsRepetitive] = useState(false);
   const [startDate, setStartDate] = useState(String);
   const [endDate, setEndDate] = useState(String);
+  const [startDateMobile, setStartDateMobile] = useState(new Date());
+  const [endDateMobile, setEndDateMobile] = useState(new Date());
 
   const toggleDaySelection = (day: string) => {
     setSelectedDays((prevSelectedDays) =>
@@ -103,41 +108,74 @@ const ReminderScheduler = () => {
             </>
           ) : (
             <>
-              <Button title="Select Start Date" onPress={() => setShowDatePicker(true)} />
+              <View style={styles.row}>
+                <TextInput
+                  style={[styles.input, { flex: 1, color: 'white' }]}
+                  placeholder="Start Date"
+                  placeholderTextColor="white"
+                  value={startDateMobile.toLocaleDateString()}
+                  editable={false}
+                />
+                <View style={styles.buttonContainer}>
+                  <Button title="Start Date" onPress={() => setShowDatePicker(true)} />
+                </View>
+              </View>
               {showDatePicker && (
                 <DateTimePicker
-                  value={startDate}
+                  value={startDateMobile}
                   mode="date"
                   display="default"
                   onChange={(event, selectedDate) => {
                     setShowDatePicker(false);
-                    if (selectedDate) setStartDate(selectedDate.toString());
+                    if (selectedDate) setStartDateMobile(selectedDate);
                   }}
                 />
               )}
 
-              <Button title="Select End Date" onPress={() => setShowDatePicker(true)} />
-              {showDatePicker && (
+              <View style={styles.row}>
+                <TextInput
+                  style={[styles.input, { flex: 1, color: 'white' }]}
+                  placeholder="End Date"
+                  placeholderTextColor="white"
+                  value={endDateMobile.toLocaleDateString()}
+                  editable={false}
+                />
+                <View style={styles.buttonContainer}>
+                  <Button title="End Date" onPress={() => setShowEndDatePicker(true)} />
+                </View>
+              </View>
+              {showEndDatePicker && (
                 <DateTimePicker
-                  value={endDate}
+                  value={endDateMobile}
                   mode="date"
                   display="default"
                   onChange={(event, selectedDate) => {
-                    setShowDatePicker(false);
-                    if (selectedDate) setEndDate(selectedDate.toString());
+                    setShowEndDatePicker(false);
+                    if (selectedDate) setEndDateMobile(selectedDate);
                   }}
                 />
               )}
 
-              <Button title="Select Time" onPress={() => setShowTimePicker(true)} />
+              <View style={styles.row}>
+                <TextInput
+                  style={[styles.input, { flex: 1, color: 'white' }]}
+                  placeholder="Time"
+                  placeholderTextColor="white"
+                  value={timeMobile.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  editable={false}
+                />
+                <View style={styles.buttonContainer}>
+                  <Button title="Time" onPress={() => setShowTimePicker(true)} />
+                </View>
+              </View>
               {showTimePicker && (
                 <DateTimePicker
-                  value={time}
+                  value={timeMobile}
                   mode="time"
                   display="default"
                   onChange={(event, selectedTime) => {
                     setShowTimePicker(false);
-                    if (selectedTime) setTime(selectedTime.toString());
+                    if (selectedTime) setTimeMobile(selectedTime);
                   }}
                 />
               )}
@@ -160,7 +198,7 @@ const ReminderScheduler = () => {
               />
               <TextInput
                 style={[styles.input, { color: 'white' }]}
-                placeholder="Time (HH:MM)"
+                placeholder="Time"
                 placeholderTextColor="white"
                 value={time.toString()}
                 onFocus={() => setShowTimePicker(true)}
@@ -171,28 +209,50 @@ const ReminderScheduler = () => {
             </>
           ) : (
             <>
-              <Button title="Select Date" onPress={() => setShowDatePicker(true)} />
+              <View style={styles.row}>
+                <TextInput
+                  style={[styles.input, { flex: 1, color: 'white' }]}
+                  placeholder="Date"
+                  placeholderTextColor="white"
+                  value={dateMobile.toLocaleDateString()}
+                  editable={false}
+                />
+                <View style={styles.buttonContainer}>
+                  <Button title="Date" onPress={() => setShowDatePicker(true)} />
+                </View>
+              </View>
               {showDatePicker && (
                 <DateTimePicker
-                  value={date}
+                  value={dateMobile}
                   mode="date"
                   display="default"
                   onChange={(event, selectedDate) => {
                     setShowDatePicker(false);
-                    if (selectedDate) setDate(selectedDate.toString());
+                    if (selectedDate) setDateMobile(selectedDate);
                   }}
                 />
               )}
 
-              <Button title="Select Time" onPress={() => setShowTimePicker(true)} />
+              <View style={styles.row}>
+                <TextInput
+                  style={[styles.input, { flex: 1, color: 'white' }]}
+                  placeholder="Time"
+                  placeholderTextColor="white"
+                  value={timeMobile.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  editable={false}
+                />
+                <View style={styles.buttonContainer}>
+                  <Button title="Time" onPress={() => setShowTimePicker(true)} />
+                </View>
+              </View>
               {showTimePicker && (
                 <DateTimePicker
-                  value={time}
+                  value={timeMobile}
                   mode="time"
                   display="default"
                   onChange={(event, selectedTime) => {
                     setShowTimePicker(false);
-                    if (selectedTime) setTime(selectedTime.toString());
+                    if (selectedTime) setTimeMobile(selectedTime);
                   }}
                 />
               )}
@@ -236,6 +296,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginVertical: 5,
     paddingHorizontal: 10,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 5,
+  },
+  buttonContainer: {
+    width: 100, // Set a fixed width for all buttons
+    justifyContent: 'center',
   },
 });
 
