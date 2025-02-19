@@ -5,6 +5,8 @@ import { StatusBar } from "expo-status-bar";
 import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { useState, useEffect } from "react";
 import { storageKeys } from '@/config/storageKeys';
+import { signOut } from '@/app/sign-out';
+import { Button } from 'react-native';
 
 export default function RootLayout() {
   // Show only sign in screen if no token is found in the app storage
@@ -45,9 +47,25 @@ export default function RootLayout() {
   }
   return (
     <>
-      <Stack>
-        {/* <Stack.Screen name="(tabs1)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" options={{ presentation: 'modal' }} /> */}
+      <Stack
+        screenOptions={({ route }) => ({
+          headerRight: () => (
+            route.name !== 'sign-in' && (
+              <Button
+                onPress={signOut}
+                title="Sign Out"
+                color="transparent"
+              />
+            )
+          ),
+          headerStyle: {
+            backgroundColor: '#25292e',
+          },
+          headerTintColor: '#fff',
+        })}
+      >
+        <Stack.Screen name="(tabs)" options={{ headerShown: true }} />
+        <Stack.Screen name="+not-found" options={{ presentation: 'modal' }} />
       </Stack>
       <StatusBar style="light" />
     </>
