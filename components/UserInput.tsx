@@ -120,10 +120,10 @@ const postReminder = async (text: string, itemForUserEmail: string, remindAtTime
             title: text,
             description: `Description for - ${text}`,
             remindAtTime: new Date(remindAtTime.getTime() - remindAtTime.getTimezoneOffset() * 60000).toISOString(),
-            endAfterDate: new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000).toISOString(),
+            endAfterDate: endDate ? new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000).toISOString() : null,
             isRepetitive: isRepetitive,
-            startDate: new Date(startDate.getTime() - startDate.getTimezoneOffset() * 60000).toISOString(),
-            remindAtDate: new Date(remindAtDate.getTime() - remindAtDate.getTimezoneOffset() * 60000).toISOString(),
+            startDate: startDate ? new Date(startDate.getTime() - startDate.getTimezoneOffset() * 60000).toISOString() : null,
+            remindAtDate: remindAtDate ? new Date(remindAtDate.getTime() - remindAtDate.getTimezoneOffset() * 60000).toISOString() : null,
             selectedDays: selectedDays
         });
 

@@ -281,11 +281,11 @@ const ReminderScheduler = () => {
         inputType='reminder'
         input={newReminder}
         createFor={reminderFor}
-        remindAtTime={timeMobile}
+        remindAtTime={Platform.OS === 'web' ? new Date(new Date().setHours(parseInt(timeWeb.split(':')[0]), parseInt(timeWeb.split(':')[1]))) : timeMobile}
         isRepetitive={isRepetitive}
-        startDate={Platform.OS === 'web' ? startDateWeb : startDateMobile}
-        endDate={Platform.OS === 'web' ? endDateWeb : endDateMobile}
-        remindAtDate={Platform.OS === 'web' ? dateWeb : dateMobile}
+        startDate={Platform.OS === 'web' ? (startDateWeb ? new Date(startDateWeb) : undefined) : (startDateMobile ? startDateMobile : undefined)}
+        endDate={Platform.OS === 'web' ? (endDateWeb ? new Date(endDateWeb) : undefined) : (endDateMobile ? endDateMobile : undefined)}
+        remindAtDate={Platform.OS === 'web' ? (dateWeb ? new Date(dateWeb) : undefined) : (dateMobile ? dateMobile : undefined)}
         selectedDays={selectedDays}
         onPress={(inputType, input, createFor, remindAtTime, startDate, endDate, remindAtDate) => addReminder(input, createFor, remindAtTime, isRepetitive, startDate, endDate, remindAtDate, selectedDays)}
       />
