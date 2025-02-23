@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform, TextInput, Button } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import RadioButton from './RadioButton';
+import RadioButton from '@/components/RadioButton';
+import { addReminder } from '@/components/UserInput';
+import BuddyButton from '@/components/BuddyButton';
 
 const daysOfWeek = [
   { label: 'S', value: 'Sunday' },
@@ -14,19 +16,24 @@ const daysOfWeek = [
 ];
 
 const ReminderScheduler = () => {
-  const [date, setDate] = useState(String);
+  const [dateWeb, setDateWeb] = useState(String);
+  const [startDateWeb, setStartDateWeb] = useState(String);
+  const [endDateWeb, setEndDateWeb] = useState(String);
+  const [timeWeb, setTimeWeb] = useState(String);
+
   const [dateMobile, setDateMobile] = useState(new Date());
-  const [time, setTime] = useState(String);
   const [timeMobile, setTimeMobile] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showEndDatePicker, setShowEndDatePicker] = useState(false);
-  const [showTimePicker, setShowTimePicker] = useState(false);
-  const [selectedDays, setSelectedDays] = useState<string[]>([]);
-  const [isRepetitive, setIsRepetitive] = useState(false);
-  const [startDate, setStartDate] = useState(String);
-  const [endDate, setEndDate] = useState(String);
   const [startDateMobile, setStartDateMobile] = useState(new Date());
   const [endDateMobile, setEndDateMobile] = useState(new Date());
+  const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+
+  const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  const [isRepetitive, setIsRepetitive] = useState(false);
+  const [newReminder, submitNewReminder] = useState(''); // State for accepting new reminders
+  const [reminderFor, setReminderFor] = useState('');
+
 
   const toggleDaySelection = (day: string) => {
     setSelectedDays((prevSelectedDays) =>
@@ -36,19 +43,22 @@ const ReminderScheduler = () => {
     );
   };
 
-  const handleSchedule = () => {
-    console.log('Scheduled reminder:', {
-      date,
-      time,
-      selectedDays,
-      isRepetitive,
-      startDate,
-      endDate,
-    });
-  };
-
   return (
     <View>
+      <TextInput
+        style={{ height: 40, padding: 5, color: 'white' }}
+        placeholder="CreateFor"
+        placeholderTextColor="white"
+        onChangeText={newReminderFor => setReminderFor(newReminderFor)}
+        defaultValue={reminderFor}
+      />
+      <TextInput
+        style={{ height: 40, padding: 5, color: 'white' }}
+        placeholder="Reminder"
+        placeholderTextColor="white"
+        onChangeText={acceptNewReminder => submitNewReminder(acceptNewReminder)}
+        defaultValue={newReminder}
+      />
       <View style={styles.radioContainer}>
         <RadioButton
           value="single"
@@ -88,22 +98,25 @@ const ReminderScheduler = () => {
                 style={[styles.input, { color: 'white' }]}
                 placeholder="Start Date (YYYY-MM-DD)"
                 placeholderTextColor="white"
-                value={startDate}
-                onChangeText={(newStartDate) => setStartDate(newStartDate)}
+                value={startDateWeb}
+                editable={true}
+                onChangeText={(newStartDate) => setStartDateWeb(newStartDate)}
               />
               <TextInput
                 style={[styles.input, { color: 'white' }]}
                 placeholder="End Date (YYYY-MM-DD)"
                 placeholderTextColor="white"
-                value={endDate}
-                onChangeText={(newEndDate) => setEndDate(newEndDate)}
+                value={endDateWeb}
+                editable={true}
+                onChangeText={(newEndDate) => setEndDateWeb(newEndDate)}
               />
               <TextInput
                 style={[styles.input, { color: 'white' }]}
                 placeholder="Time (HH:MM)"
                 placeholderTextColor="white"
-                value={time}
-                onChangeText={(newTime) => setTime(newTime)}
+                value={timeWeb}
+                editable={true}
+                onChangeText={(newTime) => setTimeWeb(newTime)}
               />
             </>
           ) : (
@@ -159,7 +172,7 @@ const ReminderScheduler = () => {
               <View style={styles.row}>
                 <TextInput
                   style={[styles.input, { flex: 1, color: 'white' }]}
-                  placeholder="Time"
+                  placeholder="Time (HH:MM)"
                   placeholderTextColor="white"
                   value={timeMobile.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   editable={false}
@@ -190,20 +203,20 @@ const ReminderScheduler = () => {
                 style={[styles.input, { color: 'white' }]}
                 placeholder="Date (YYYY-MM-DD)"
                 placeholderTextColor="white"
-                value={date.toString().substring(0, 10)}
-                onFocus={() => setShowDatePicker(true)}
+                value={dateWeb}
+                editable={true}
                 onChangeText={(newDate) => {
-                  setDate(newDate);
+                  setDateWeb(newDate);
                 }}
               />
               <TextInput
                 style={[styles.input, { color: 'white' }]}
-                placeholder="Time"
+                placeholder="Time (HH:MM)"
                 placeholderTextColor="white"
-                value={time.toString()}
-                onFocus={() => setShowTimePicker(true)}
+                value={timeWeb}
+                editable={true}
                 onChangeText={(newTime) => {
-                  setTime(newTime);
+                  setTimeWeb(newTime);
                 }}
               />
             </>
@@ -214,6 +227,7 @@ const ReminderScheduler = () => {
                   style={[styles.input, { flex: 1, color: 'white' }]}
                   placeholder="Date"
                   placeholderTextColor="white"
+                  onFocus={() => setShowDatePicker(true)}
                   value={dateMobile.toLocaleDateString()}
                   editable={false}
                 />
@@ -236,8 +250,9 @@ const ReminderScheduler = () => {
               <View style={styles.row}>
                 <TextInput
                   style={[styles.input, { flex: 1, color: 'white' }]}
-                  placeholder="Time"
+                  placeholder="Time (HH:MM)"
                   placeholderTextColor="white"
+                  onFocus={() => setShowTimePicker(true)}
                   value={timeMobile.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   editable={false}
                 />
@@ -260,6 +275,21 @@ const ReminderScheduler = () => {
           )}
         </>
       )}
+      <BuddyButton
+        theme="buddy"
+        label="Set Reminder"
+        inputType='reminder'
+        input={newReminder}
+        createFor={reminderFor}
+        remindAtTime={timeMobile}
+        isRepetitive={isRepetitive}
+        startDate={Platform.OS === 'web' ? startDateWeb : startDateMobile}
+        endDate={Platform.OS === 'web' ? endDateWeb : endDateMobile}
+        remindAtDate={Platform.OS === 'web' ? dateWeb : dateMobile}
+        selectedDays={selectedDays}
+        onPress={(inputType, input, createFor, remindAtTime, startDate, endDate, remindAtDate) => addReminder(input, createFor, remindAtTime, isRepetitive, startDate, endDate, remindAtDate, selectedDays)}
+      />
+      {/* <BuddyButton theme="buddy" label="Submit" inputType='' input={newReminder} createFor={reminderFor} remindAtTime={remindAtTime} onPress={() => addReminder(newReminder, reminderFor, remindAtTime, isRepetitive, startDate, endDate, remindAtDate)} /> */}
     </View>
   );
 };

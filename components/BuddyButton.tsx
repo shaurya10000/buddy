@@ -7,11 +7,16 @@ type Props = {
   inputType: string;
   input: string;
   createFor?: string,
-  remindAtTime?: string,
-  onPress: (inputType: string, input: string, createFor: string | undefined, remindAtTime: string | undefined) => void;
+  remindAtTime?: Date,
+  isRepetitive: boolean;
+  startDate: Date | undefined;
+  endDate: Date | undefined;
+  remindAtDate: Date | undefined;
+  selectedDays: string[];
+  onPress: (inputType: string, input: string, createFor: string | undefined, remindAtTime: Date | undefined, startDate: Date | undefined, endDate: Date | undefined, remindAtDate: Date | undefined, selectedDays: string[]) => void;
 };
 
-export default function BuddyButton({ label, theme, inputType, input, createFor, remindAtTime, onPress }: Props) {
+export default function BuddyButton({ label, theme, inputType, input, createFor, remindAtTime, isRepetitive, startDate, endDate, remindAtDate, selectedDays, onPress }: Props) {
   if (theme === 'primary') {
     return (
       <View
@@ -36,7 +41,7 @@ export default function BuddyButton({ label, theme, inputType, input, createFor,
           // { borderWidth: 1, borderColor: '#ffd33d', borderRadius: 8 },
         ]}>
         <Pressable
-          style={[styles.button, { backgroundColor: '#fff' }]} onPress={() => onPress(inputType, input, createFor, remindAtTime)}>
+          style={[styles.button, { backgroundColor: '#fff' }]} onPress={() => onPress(inputType, input, createFor, remindAtTime, startDate, endDate, remindAtDate, selectedDays)}>
           <FontAwesome name="picture-o" size={8} color="#25292e" style={styles.buttonIcon} />
           <Text style={[styles.buttonLabel, { color: '#25292e' }]}>{label}</Text>
         </Pressable>
@@ -46,7 +51,7 @@ export default function BuddyButton({ label, theme, inputType, input, createFor,
 
   return (
     <View style={styles.buttonContainer}>
-      <Pressable style={styles.button} onPress={() => onPress(inputType, input, createFor, remindAtTime)}>
+      <Pressable style={styles.button} onPress={() => onPress(inputType, input, createFor, remindAtTime, startDate, endDate, remindAtDate, selectedDays)}>
         <Text style={styles.buttonLabel}>{label}</Text>
       </Pressable>
     </View>
@@ -55,7 +60,8 @@ export default function BuddyButton({ label, theme, inputType, input, createFor,
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    width: 120,
+    // width: 120,
+    width: 'auto',
     height: 34,
     marginHorizontal: 8,
     alignItems: 'center',

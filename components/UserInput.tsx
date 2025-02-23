@@ -4,7 +4,6 @@ import BuddyButton from '@/components/BuddyButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SERVER_ENDPOINT } from '@/constants/Backend';
 import { storageKeys } from '@/config/storageKeys';
-import { Task } from '@/types/Task';
 
 const goOverHistory = async () => {
     try {
@@ -99,16 +98,40 @@ const postTask = async (text: string, itemForUserEmail: string) => {
     // storeTuple(input, 'task');
 };
 
-const postReminder = async (text: string, itemForUserEmail: string, remindAtTime: string) => {
+const postReminder = async (text: string, itemForUserEmail: string, remindAtTime: Date, isRepetitive: boolean, startDate: Date, endDate: Date, remindAtDate: Date, selectedDays: string[]) => {
+    console.log(`Posting reminder for: ${text}`);
+    console.log(`Remind at time: ${remindAtTime}`);
+    console.log(`Is repetitive: ${isRepetitive}`);
+    console.log(`Start date: ${startDate}`);
+    console.log(`End date: ${endDate}`);
+    console.log(`Remind at date: ${remindAtDate}`);
+    console.log(`Selected days: ${selectedDays}`);
+
     if (itemForUserEmail === '') {
         const user = await AsyncStorage.getItem('user');
         if (user !== undefined && user !== null) {
             itemForUserEmail = JSON.parse(user).email;
         }
     }
-    // userName, title, description, remindAtTime, scheduleType, schedule, endAfterDate
-    const body: string = `{ "userName": "${itemForUserEmail}", "title": "${text}", "description": "Description for - ${text}", "remindAtTime": "${remindAtTime}", "scheduleType": "hours", "schedule": "12", "endAfterDate": "03/31/2025"}`;
-    postTuple('reminder', body);
+
+    try {
+        const body = JSON.stringify({
+            userName: itemForUserEmail,
+            title: text,
+            description: `Description for - ${text}`,
+            remindAtTime: new Date(remindAtTime.getTime() - remindAtTime.getTimezoneOffset() * 60000).toISOString(),
+            endAfterDate: new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000).toISOString(),
+            isRepetitive: isRepetitive,
+            startDate: new Date(startDate.getTime() - startDate.getTimezoneOffset() * 60000).toISOString(),
+            remindAtDate: new Date(remindAtDate.getTime() - remindAtDate.getTimezoneOffset() * 60000).toISOString(),
+            selectedDays: selectedDays
+        });
+
+        postTuple('reminder', body);
+    } catch (error) {
+        console.error('Error posting reminder:', error);
+        throw error; // Re-throw the error to be handled by the caller
+    }
 };
 
 const postTuple = async (inputType: string, body: string): Promise<void> => {
@@ -195,10 +218,10 @@ const addTask = async (input: string, createFor: string) => {
 };
 
 // userName, title, description, remindAtTime, scheduleType, schedule, endAfterDate
-const addReminder = async (input: string, createFor: string, remindAtTime: string | undefined) => {
+const addReminder = async (input: string, createFor: string, remindAtTime: Date | undefined, isRepetitive: boolean, startDate: Date, endDate: Date, remindAtDate: Date, selectedDays: string[]) => {
     storeTuple(input, 'reminder');
     alert(`Remind for: ${input}`);
-    postReminder(input, createFor, remindAtTime as string);
+    postReminder(input, createFor, remindAtTime, isRepetitive, startDate, endDate, remindAtDate, selectedDays);
 };
 
 /**
