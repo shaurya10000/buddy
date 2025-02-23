@@ -119,11 +119,11 @@ const postReminder = async (text: string, itemForUserEmail: string, remindAtTime
             userName: itemForUserEmail,
             title: text,
             description: `Description for - ${text}`,
-            remindAtTime: new Date(remindAtTime.getTime() - remindAtTime.getTimezoneOffset() * 60000).toISOString(),
-            endAfterDate: endDate ? new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000).toISOString() : null,
+            remindAtTime: `${remindAtTime.getUTCHours()}:${remindAtTime.getUTCMinutes()}:${remindAtTime.getUTCSeconds()}:UTC}`,
             isRepetitive: isRepetitive,
-            startDate: startDate ? new Date(startDate.getTime() - startDate.getTimezoneOffset() * 60000).toISOString() : null,
             remindAtDate: remindAtDate ? new Date(remindAtDate.getTime() - remindAtDate.getTimezoneOffset() * 60000).toISOString() : null,
+            startDate: startDate ? new Date(startDate.getTime() - startDate.getTimezoneOffset() * 60000).toISOString() : null,
+            endAfterDate: endDate ? new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000).toISOString() : null,
             selectedDays: selectedDays
         });
 
