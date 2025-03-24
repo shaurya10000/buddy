@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { Svg, Path } from 'react-native-svg';
 
 export interface ProjectProps {
@@ -18,23 +18,33 @@ export default function Project(props: ProjectProps) {
         </View>  )
 }
 
+const tileHeight = (Dimensions.get('window').height / 2) - 20;
+const tileWidth = (Dimensions.get('window').width / 2) - 20;
+
 const styles = StyleSheet.create({
     projectContainer: {
         position: "relative",
         flexShrink: 0,
-        height: 125,
-        width: 340,
+        height: tileHeight,
+        width: tileWidth,
         backgroundColor: "rgba(218, 87, 87, 1)",
         display: "flex",
         alignItems: "flex-start",
-        rowGap: 0
+        rowGap: 0,
+        marginLeft: 10,
+        marginRight: 10,
+        marginBottom: 10,
     },
     text: {
-        position: "absolute",
+        // The flexShrink property specifies that the text should not shrink when there is not enough space.
         flexShrink: 0,
-        right: 149,
-        bottom: 54,
-        left: 142,
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: [
+            { translateX: '-50%' },
+            { translateY: '-50%' }
+        ],
         textAlign: "left",
         color: "rgba(0, 0, 0, 1)",
         fontFamily: "Inter",
