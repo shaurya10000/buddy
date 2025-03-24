@@ -1,5 +1,7 @@
 const SERVER_ENDPOINT = "http://10.0.0.163:8080/";
+const PROJECTS_ENDPOINT = `${SERVER_ENDPOINT}projects`;
 
 export {
     SERVER_ENDPOINT,
+    PROJECTS_ENDPOINT,
 }

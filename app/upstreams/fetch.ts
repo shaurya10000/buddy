@@ -1,11 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SERVER_ENDPOINT } from '@/constants/Backend';
+import { SERVER_ENDPOINT } from '@/backend/config/constants';
 import { storeTuples } from '@/components/UserInput';
 import { scheduleNotification } from '@/app/notifications/localNotifications';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import { storageKeys } from '@/config/storageKeys';
-import { Task } from '@/types/Task';
+import { Task } from '@/models/Task';
 
 // Function to fetch tasks from the server and save them locally
 async function populateTasksInLocalStorageFromServer() {

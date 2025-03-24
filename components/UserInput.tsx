@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TextInput, View } from 'react-native';
 import BuddyButton from '@/components/BuddyButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SERVER_ENDPOINT } from '@/constants/Backend';
+import { SERVER_ENDPOINT } from '@/backend/config/constants';
 import { storageKeys } from '@/config/storageKeys';
 
 const goOverHistory = async () => {
