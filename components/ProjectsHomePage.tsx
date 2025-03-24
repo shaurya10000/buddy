@@ -18,7 +18,7 @@ export default function ProjectsViewHomePage() {
 
 const styles = StyleSheet.create({
     projectsViewHomePageContainer: {
-        flex: 1,
+        flex: 1,        
         display: "flex",
         backgroundColor: "rgba(255, 255, 255, 1)",
         flexDirection: "row",
@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
         // padding: 10,
     },
     createProjectButton: {
-        position: "absolute",
         // Below three lines are used to position the button at the bottom of the container
         //--------------------------------
         marginTop: "auto",

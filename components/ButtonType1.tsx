@@ -2,7 +2,7 @@ import {View, Text, StyleSheet} from 'react-native';
 
 export interface ButtonType1Props {
   displayText: string,
-  style: StyleSheet.NamedStyles<any>,
+  style: any,
   /** Used to locate this view in end-to-end tests. */
   testID?: string,
 }
@@ -19,6 +19,7 @@ export function ButtonType1(props: ButtonType1Props) {
 
 const styles = StyleSheet.create({
   box: {
+    position: 'absolute',
     width: '100%',
     height: 51,
     flexShrink: 0,
