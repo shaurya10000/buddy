@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import { ButtonType1 } from '@/components/ButtonType1';
 import Tile from '@/components/Tile';
-import { fetchProjects } from '@/backend/projectService'; // Import the function
-import { Project } from '@/models/project';
+import { fetchProjects } from '@/backend/projectService';
+import { Project } from '@/models/Project';
+import { router } from 'expo-router';
 
 export default function ProjectsViewHomePage() {
     const [projects, setProjects] = useState<Project[]>([]);
@@ -26,7 +27,9 @@ export default function ProjectsViewHomePage() {
             {projects.map((project, index) => (
                 <Tile key={index} displayText={project.name} color={project.color} />
             ))}
-            <ButtonType1 displayText="Create Project" style={styles.createProjectButton} />
+            <ButtonType1 displayText="Create Project" style={styles.createProjectButton} onPress={() => {
+                router.push('/pages/CreateProject');
+            }} />
         </View>
     );
 }

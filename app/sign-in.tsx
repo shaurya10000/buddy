@@ -73,8 +73,8 @@ export default function SignIn() {
             await populateTasksInLocalStorageFromServer();
             await populateRemindersInLocalStorageFromServer();
 
-            // Redirect to tabs after successful authentication
-            router.replace("/(tabs)");
+            // Redirect to ProjectsHomePage after successful authentication
+            router.replace('/pages/ProjectsHomePage');
             
         } catch (error) {
             console.error(

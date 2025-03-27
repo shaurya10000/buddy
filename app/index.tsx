@@ -1,7 +1,6 @@
-import { SafeAreaView, StyleSheet } from "react-native";
-import { inputText as UserInput } from '@/components/UserInput';
+import { StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import ProjectsViewHomePage from "@/components/ProjectsHomePage";
+import ProjectsViewHomePage from '@/app/pages/ProjectsHomePage';
 
 export default function Index() {
   return (
