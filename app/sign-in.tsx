@@ -29,8 +29,6 @@ export default function SignIn() {
     const signInWithGoogle = async (response: AuthSessionResult | null) => {
         try {
             AsyncStorage.clear();
-            const userJSON = await AsyncStorage.getItem("user");
-
             if (response?.type === "success") {
                 // If the response type is "success" (assuming response is defined),
                 // call getUserInfo with the access token from the response
