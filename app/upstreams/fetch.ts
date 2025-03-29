@@ -5,7 +5,7 @@ import { scheduleNotification } from '@/app/notifications/localNotifications';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import { storageKeys } from '@/config/storageKeys';
-import { Task } from '@/models/Task';
+import { Task } from '@/models/responseModels/Task';
 
 // Function to fetch tasks from the server and save them locally
 async function populateTasksInLocalStorageFromServer() {

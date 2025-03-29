@@ -3,50 +3,93 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, TextInput } from 'react-native';
 import { ButtonType1 } from '@/components/ButtonType1';
-import { ButtonType2 } from '@/components/ButtonType2';
 import { EdittableRichTextBox1NoBoundary } from '@/components/EditableRichTextBoxNoBoundary';
-import { handleCreateProject, handleCancel } from '@/utils/projectHandlers';
+import { createProjectHandler } from '@/handler/createProject';
+import { buttonAtBottom, fullPageContainer } from '@/app/styles/common';
 
 export default function CreateProject() {
-    const [projectName, setProjectName] = useState('');
-    const [projectDescription, setProjectDescription] = useState('');
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
 
     return (
-        <View style={styles.container}>
-            <EdittableRichTextBox1NoBoundary displayText="Create a New Project" />
-            <TextInput
-                style={styles.input}
-                placeholder="Project Name"
-                value={projectName}
-                onChangeText={setProjectName}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Project Description"
-                value={projectDescription}
-                onChangeText={setProjectDescription}
-                multiline
-            />
-            <ButtonType1 displayText="Create Project" style={styles.button} testID="createProjectButton" onPress={() => handleCreateProject(projectName, projectDescription)} />
-            <ButtonType2 displayText="Cancel" testID="cancelButton" onPress={handleCancel} />
-        </View>
-    );
+        <View style={styles.createProjectContainer}>
+            {/* component edittableRichTextBox1NoBoundary */}
+            <EdittableRichTextBox1NoBoundary displayText="Type in the name of your project" />
+            {/* Visualwind:: can be replaced with <_edittableRichTextBox1NoBoundary  /> */}
+            <EdittableRichTextBox1NoBoundary displayText="Type in the description of your project" />
+            {/* Visualwind:: can be replaced with <ButtonType1  /> */}
+            <ButtonType1 displayText="Generate Tasks & SubTasks" onPress={() => {
+                handleGenerateTasksSubTasks();
+            }} />
+            {/* Visualwind:: can be replaced with <ButtonType2  /> */}
+            <ButtonType1 displayText="Create" style={styles.createProjectButton} onPress={() => {
+                createProjectHandler(name, description);
+            }} />
+        </View>  )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 20,
-        backgroundColor: '#fff',
+    createProjectContainer: {
+        ...fullPageContainer,
     },
-    input: {
-        height: 40,
-        borderColor: 'gray',
-        borderWidth: 1,
-        marginBottom: 10,
-        paddingHorizontal: 10,
+    edittableRichTextBox1NoBoundary: {
+        position: "absolute",
+        flexShrink: 0,
+        top: 69,
+        left: 19,
+        width: 640,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        columnGap: 10
     },
-    button: {
-        marginTop: 20,
+    projectDescription: {
+        position: "relative",
+        flexGrow: 1,
+        flexShrink: 1,
+        flexBasis: 0,
+        textAlign: "left",
+        color: "rgba(0, 0, 0, 1)",
+        fontFamily: "Inter",
+        fontSize: 12,
+        fontWeight: 400
     },
+    _edittableRichTextBox1NoBoundary: {
+        position: "absolute",
+        flexShrink: 0,
+        top: 29,
+        left: 19,
+        width: 640,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        columnGap: 10
+    },
+    projectName: {
+        position: "relative",
+        flexGrow: 1,
+        flexShrink: 1,
+        flexBasis: 0,
+        textAlign: "left",
+        color: "rgba(0, 0, 0, 1)",
+        fontFamily: "Inter",
+        fontSize: 12,
+        fontWeight: 400
+    },
+    createProjectButton: {
+        ...buttonAtBottom,
+    },
+    generateTasksSubTasks: {
+        position: "absolute",
+        flexShrink: 0,
+        top: 3,
+        right: 262,
+        bottom: 4,
+        left: 260,
+        textAlign: "center",
+        color: "rgba(0, 0, 0, 1)",
+        fontFamily: "Inter",
+        fontSize: 12,
+        fontWeight: 400
+    }
 });

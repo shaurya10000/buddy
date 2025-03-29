@@ -4,13 +4,15 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ProjectsViewHomePage from '@/app/pages/ProjectsHomePage';
 import { router } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { storageKeys } from "@/config/storageKeys";
 
 export default function Index() {
   useEffect(() => {
     const checkAccessToken = async () => {
       try {
-        const accessToken = await AsyncStorage.getItem('accessToken');
-        const expiryTime = await AsyncStorage.getItem('accessTokenExpiry');
+        const accessTokenWithExpiry = await AsyncStorage.getItem(storageKeys.token);
+        const accessToken = JSON.parse(accessTokenWithExpiry || '{}').accessToken;
+        const expiryTime = JSON.parse(accessTokenWithExpiry || '{}').expiryTime;
 
         if (!accessToken || !expiryTime) {
           router.replace('/sign-in'); // Redirect if no token or expiry

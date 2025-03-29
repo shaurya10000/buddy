@@ -3,8 +3,9 @@ import { View, StyleSheet, Dimensions } from 'react-native';
 import { ButtonType1 } from '@/components/ButtonType1';
 import Tile from '@/components/Tile';
 import { fetchProjects } from '@/backend/projectService';
-import { Project } from '@/models/Project';
+import { Project } from '@/models/responseModels/Project';
 import { router } from 'expo-router';
+import { buttonAtBottom, fullPageContainer } from '@/app/styles/common';
 
 export default function ProjectsViewHomePage() {
     const [projects, setProjects] = useState<Project[]>([]);
@@ -36,21 +37,9 @@ export default function ProjectsViewHomePage() {
 
 const styles = StyleSheet.create({
     projectsViewHomePageContainer: {
-        flex: 1,        
-        display: "flex",
-        backgroundColor: "rgba(255, 255, 255, 1)",
-        flexDirection: "row",
-        flexWrap: "wrap",
-        // justifyContent: "space-between",
-        // padding: 10,
+        ...fullPageContainer,
     },
     createProjectButton: {
-        // Below three lines are used to position the button at the bottom of the container
-        //--------------------------------
-        marginTop: "auto",
-        bottom: 0,
-        left: 0,
-        //--------------------------------
-        // End of positioning the button at the bottom of the container
+        ...buttonAtBottom,
     }
 });

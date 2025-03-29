@@ -2,7 +2,7 @@
 // A work item is a common project, task, or subtask
 
 import { Status } from "@/constants/Status";
-import { Comment } from "@/models/Comment";
+import { Comment } from "@/models/responseModels/Comment";
 
 export interface WorkItem {
     id: string;

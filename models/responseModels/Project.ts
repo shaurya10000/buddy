@@ -1,6 +1,6 @@
-import { ProjectTask } from "@/models/ProjectTask";
-import { User } from "@/models/User";
-import { WorkItem } from "@/models/WorkItem";
+import { ProjectTask } from "@/models/responseModels/ProjectTask";
+import { User } from "@/models/responseModels/User";
+import { WorkItem } from "@/models/responseModels/WorkItem";
 
 export interface Project extends WorkItem {
     tasks: ProjectTask[]; // This can be just a list of task ids
