@@ -20,9 +20,7 @@ export function ButtonType1(props: ButtonType1Props) {
 
 const styles = StyleSheet.create({
   box: {
-    position: 'absolute',
     width: '100%',
-    height: 51,
     flexShrink: 0,
     backgroundColor: 'rgba(234, 214, 214, 1)',
     shadowColor: 'rgba(0, 0, 0, 0.250980406999588)',
@@ -30,7 +28,6 @@ const styles = StyleSheet.create({
     shadowOffset: {"width":0,"height":4},
   },
   text: {
-    position: 'absolute',
     left: '50%',
     top: '50%',
     transform: [

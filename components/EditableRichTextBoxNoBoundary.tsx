@@ -1,40 +1,49 @@
 import { View, Text, StyleSheet } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
+import { useState } from 'react';
 
 export interface EdittableRichTextBox1NoBoundaryProps {
     displayText: string,
+    style?: any,
+    textInputProps?: any,
+    multiline?: boolean,
+    maxLength?: number,
     /** Used to locate this view in end-to-end tests. */
     testID?: string,
 }
 
 export function EdittableRichTextBox1NoBoundary(props: EdittableRichTextBox1NoBoundaryProps) {
-
+    const [text, setText] = useState(props.displayText);
     return (
-        <View style={styles.projectTasksViewTitleWindowContainer} testID={props.testID ?? "75:860"}>
-            <Text style={styles.textBox} testID="75:859">
-                {props.displayText}
-            </Text>
+        <View style={[styles.projectTasksViewTitleWindowContainer, props.style]} testID={props.testID ?? "75:860"}>
+            <TextInput 
+                style={[styles.textBox, props.textInputProps]} 
+                testID="75:859" 
+                value={text} 
+                onChangeText={(inputText) => {
+                    if (!props.maxLength || inputText.length <= props.maxLength) {
+                        setText(inputText);
+                    }
+                }}
+                multiline={props.multiline ?? false}
+                maxLength={props.textInputProps?.maxLength}
+            />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     projectTasksViewTitleWindowContainer: {
-        flexDirection: 'row',
-        width: 640,
-        maxWidth: 640,
-        justifyContent: 'center',
-        alignItems: 'center',
-        rowGap: 10,
-        columnGap: 10,
+        width: '100%',
+        backgroundColor: 'offwhite',
+        borderWidth: 1,
     },
     textBox: {
-        flexGrow: 1,
-        flexShrink: 0,
-        flexBasis: 0,
         color: 'rgba(0, 0, 0, 1)',
         fontFamily: 'Inter',
         fontSize: 12,
         fontStyle: 'normal',
         fontWeight: '400',
     },
+
 });

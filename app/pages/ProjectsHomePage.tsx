@@ -5,7 +5,7 @@ import Tile from '@/components/Tile';
 import { fetchProjects } from '@/backend/projectService';
 import { Project } from '@/models/responseModels/Project';
 import { router } from 'expo-router';
-import { buttonAtBottom, fullPageContainer } from '@/app/styles/common';
+import { bottomFullWidthPlacement, fullPageContainer } from '@/app/styles/common';
 
 export default function ProjectsViewHomePage() {
     const [projects, setProjects] = useState<Project[]>([]);
@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
         ...fullPageContainer,
     },
     createProjectButton: {
-        ...buttonAtBottom,
+        ...bottomFullWidthPlacement,
+        height: 51,
     }
 });

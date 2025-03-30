@@ -1,95 +1,59 @@
-// This file is the page for creating a new project.
-
 import React, { useState } from 'react';
-import { View, StyleSheet, TextInput } from 'react-native';
+import { View, StyleSheet, SafeAreaView, TextInput } from 'react-native'; // Import SafeAreaView and TextInput
 import { ButtonType1 } from '@/components/ButtonType1';
 import { EdittableRichTextBox1NoBoundary } from '@/components/EditableRichTextBoxNoBoundary';
 import { createProjectHandler } from '@/handler/createProject';
-import { buttonAtBottom, fullPageContainer } from '@/app/styles/common';
+import { fullPageContainer } from '@/app/styles/common'; // Import fullPageContainer
 
 export default function CreateProject() {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
 
     return (
-        <View style={styles.createProjectContainer}>
-            {/* component edittableRichTextBox1NoBoundary */}
-            <EdittableRichTextBox1NoBoundary displayText="Type in the name of your project" />
-            {/* Visualwind:: can be replaced with <_edittableRichTextBox1NoBoundary  /> */}
-            <EdittableRichTextBox1NoBoundary displayText="Type in the description of your project" />
-            {/* Visualwind:: can be replaced with <ButtonType1  /> */}
-            <ButtonType1 displayText="Generate Tasks & SubTasks" onPress={() => {
-                handleGenerateTasksSubTasks();
-            }} />
-            {/* Visualwind:: can be replaced with <ButtonType2  /> */}
-            <ButtonType1 displayText="Create" style={styles.createProjectButton} onPress={() => {
-                createProjectHandler(name, description);
-            }} />
-        </View>  )
+        <SafeAreaView style={styles.safeArea}> // Wrap with SafeAreaView
+            <View style={styles.createProjectContainer}>
+                {/* <EdittableRichTextBox1NoBoundary displayText="Project Description" style={styles.projectDescription}/> */}
+                <ButtonType1 displayText="Create" style={styles.createProjectButton} onPress={() => {
+                    createProjectHandler(name, description);
+                }} />
+                <ButtonType1 displayText="Generate Tasks & SubTasks" style={styles.generateTasksSubTasksButton} onPress={() => {
+                    console.log('Generate Tasks & SubTasks');
+                }} />
+                <EdittableRichTextBox1NoBoundary displayText="Project Description" style={styles.projectDescription} textInputProps={styles.projectDescriptionTextInput} multiline={true} maxLength={10000} />
+                <EdittableRichTextBox1NoBoundary displayText="Project Name" style={styles.projectName} textInputProps={styles.projectNameTextInput} multiline={true} maxLength={100} />
+            </View>
+        </SafeAreaView>
+    );
 }
 
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1, // Ensure SafeAreaView takes full screen
+    },
     createProjectContainer: {
         ...fullPageContainer,
+        display: 'flex',
+        flex: 1, // Ensure container takes full screen
+        flexDirection: 'column-reverse',
     },
-    edittableRichTextBox1NoBoundary: {
-        position: "absolute",
-        flexShrink: 0,
-        top: 69,
-        left: 19,
-        width: 640,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        columnGap: 10
-    },
-    projectDescription: {
-        position: "relative",
-        flexGrow: 1,
-        flexShrink: 1,
-        flexBasis: 0,
-        textAlign: "left",
-        color: "rgba(0, 0, 0, 1)",
-        fontFamily: "Inter",
-        fontSize: 12,
-        fontWeight: 400
-    },
-    _edittableRichTextBox1NoBoundary: {
-        position: "absolute",
-        flexShrink: 0,
-        top: 29,
-        left: 19,
-        width: 640,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        columnGap: 10
-    },
-    projectName: {
-        position: "relative",
-        flexGrow: 1,
-        flexShrink: 1,
-        flexBasis: 0,
-        textAlign: "left",
-        color: "rgba(0, 0, 0, 1)",
-        fontFamily: "Inter",
-        fontSize: 12,
-        fontWeight: 400
+    generateTasksSubTasksButton: {
+        height: 25,
     },
     createProjectButton: {
-        ...buttonAtBottom,
+        height: 50,
     },
-    generateTasksSubTasks: {
-        position: "absolute",
-        flexShrink: 0,
-        top: 3,
-        right: 262,
-        bottom: 4,
-        left: 260,
-        textAlign: "center",
-        color: "rgba(0, 0, 0, 1)",
-        fontFamily: "Inter",
-        fontSize: 12,
-        fontWeight: 400
-    }
+    projectDescription: {
+        flex: 1,
+    },
+    projectName: {
+        height: 25,
+        // align self to left
+        alignSelf: 'flex-start',
+    },
+    projectNameTextInput: {
+        flex: 1,
+    },
+    projectDescriptionTextInput: {
+        flex: 1,
+    },
 });
