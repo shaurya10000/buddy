@@ -1,5 +1,5 @@
 import { createProject } from '@/backend/projectService';
-import { CreateProjectRequest } from '@/models/requestModels/Project';
+import { CreateProjectRequest } from '@/models/requestModels/CreateProjectRequest';
 import { Project } from '@/models/responseModels/Project';
 
 export const createProjectHandler = async (name: string, description: string): Promise<Project> => {
