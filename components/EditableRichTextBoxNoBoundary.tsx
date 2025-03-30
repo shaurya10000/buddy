@@ -3,7 +3,6 @@ import { TextInput } from 'react-native-gesture-handler';
 import { useState } from 'react';
 
 export interface EdittableRichTextBox1NoBoundaryProps {
-    displayText: string,
     style?: any,
     textInputProps?: any,
     multiline?: boolean,
@@ -13,19 +12,29 @@ export interface EdittableRichTextBox1NoBoundaryProps {
 }
 
 export function EdittableRichTextBox1NoBoundary(props: EdittableRichTextBox1NoBoundaryProps) {
-    const [text, setText] = useState(props.displayText);
+    const initialText = props.textInputProps.initialValue;
     return (
         <View style={[styles.projectTasksViewTitleWindowContainer, props.style]} testID={props.testID ?? "75:860"}>
-            <TextInput 
-                style={[styles.textBox, props.textInputProps]} 
-                testID="75:859" 
-                value={text} 
+            <TextInput
+                style={[styles.textBox, props.textInputProps.styles]}
+                testID="75:859"
+                value={props.textInputProps.value}
                 onChangeText={(inputText) => {
-                    if (!props.maxLength || inputText.length <= props.maxLength) {
-                        setText(inputText);
+                    if (!props.textInputProps?.maxLength || inputText.length <= props.textInputProps?.maxLength) {
+                        props.textInputProps.onChangeText(inputText);
                     }
                 }}
-                multiline={props.multiline ?? false}
+                onFocus={() => {
+                    if (props.textInputProps.value === initialText) {
+                        props.textInputProps.onChangeText('');
+                    }
+                }}
+                onBlur={() => {
+                    if (props.textInputProps.value === '') {
+                        props.textInputProps.onChangeText(initialText);
+                    }
+                }}
+                multiline={props.textInputProps?.multiline ?? false}
                 maxLength={props.textInputProps?.maxLength}
             />
         </View>

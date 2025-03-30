@@ -1,26 +1,48 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, SafeAreaView, TextInput } from 'react-native'; // Import SafeAreaView and TextInput
+import { View, StyleSheet, SafeAreaView } from 'react-native'; // Import SafeAreaView and TextInput
 import { ButtonType1 } from '@/components/ButtonType1';
 import { EdittableRichTextBox1NoBoundary } from '@/components/EditableRichTextBoxNoBoundary';
 import { createProjectHandler } from '@/handler/createProject';
 import { fullPageContainer } from '@/app/styles/common'; // Import fullPageContainer
+import { MAX_PROJECT_NAME_LENGTH, MAX_PROJECT_DESCRIPTION_LENGTH } from '@/app/pages/constants';
+import { PROJECT_NAME_TEXT, PROJECT_DESCRIPTION_TEXT, GENERATE_TASKS_SUBTASKS_BUTTON_TEXT } from '@/app/pages/LocalizationStrings';
 
 export default function CreateProject() {
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
+    const [name, setName] = useState(PROJECT_NAME_TEXT);
+    const [description, setDescription] = useState(PROJECT_DESCRIPTION_TEXT);
 
     return (
-        <SafeAreaView style={styles.safeArea}> // Wrap with SafeAreaView
+        <SafeAreaView style={styles.safeArea}>
             <View style={styles.createProjectContainer}>
-                {/* <EdittableRichTextBox1NoBoundary displayText="Project Description" style={styles.projectDescription}/> */}
                 <ButtonType1 displayText="Create" style={styles.createProjectButton} onPress={() => {
                     createProjectHandler(name, description);
                 }} />
-                <ButtonType1 displayText="Generate Tasks & SubTasks" style={styles.generateTasksSubTasksButton} onPress={() => {
-                    console.log('Generate Tasks & SubTasks');
+                <ButtonType1 displayText={GENERATE_TASKS_SUBTASKS_BUTTON_TEXT} style={styles.generateTasksSubTasksButton} onPress={() => {
+                    console.log('Generate Tasks & SubTasks for project: ', name, ' and description: ', description);
                 }} />
-                <EdittableRichTextBox1NoBoundary displayText="Project Description" style={styles.projectDescription} textInputProps={styles.projectDescriptionTextInput} multiline={true} maxLength={10000} />
-                <EdittableRichTextBox1NoBoundary displayText="Project Name" style={styles.projectName} textInputProps={styles.projectNameTextInput} multiline={true} maxLength={100} />
+                <EdittableRichTextBox1NoBoundary
+                    style={styles.projectDescription}
+                    textInputProps={
+                        {
+                            initialValue: PROJECT_DESCRIPTION_TEXT,
+                            value: description,
+                            onChangeText: setDescription,
+                            multiline: true,
+                            maxLength: MAX_PROJECT_DESCRIPTION_LENGTH,
+                            styles: styles.projectDescriptionTextInput
+                        }}
+                />
+                <EdittableRichTextBox1NoBoundary
+                    style={styles.projectName}
+                    textInputProps={
+                        {
+                            initialValue: PROJECT_NAME_TEXT,
+                            value: name, onChangeText: setName,
+                            maxLength: MAX_PROJECT_NAME_LENGTH,
+                            multiline: true,
+                            styles: styles.projectNameTextInput
+                        }}
+                />
             </View>
         </SafeAreaView>
     );

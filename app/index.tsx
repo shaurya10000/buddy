@@ -37,7 +37,6 @@ export default function Index() {
   
   return (
     <GestureHandlerRootView style={styles.container}>
-
       <ProjectsViewHomePage />
     </GestureHandlerRootView>
   );
