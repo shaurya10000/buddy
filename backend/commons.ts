@@ -24,6 +24,7 @@ export const postJsonToServer = async (endpoint: string, body: any) => {
     if (!accessToken) {
         throw new Error('No access token found');
     }
+    
     const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
@@ -32,6 +33,7 @@ export const postJsonToServer = async (endpoint: string, body: any) => {
         },
         body: JSON.stringify(body)
     });
+
     if (!response.ok) {
         throw new Error('Failed to trigger POST to server');
     }

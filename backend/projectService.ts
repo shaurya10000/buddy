@@ -1,11 +1,11 @@
 import { getFromServer, postJsonToServer } from "@/backend/commons";
-import { PROJECTS_ENDPOINT } from "@/backend/config/constants";
+import { CREATE_PROJECT_ENDPOINT, GET_PROJECTS_ENDPOINT } from "@/backend/config/constants";
 import { CreateProjectRequest } from "@/models/requestModels/CreateProjectRequest";
 import { Project } from "@/models/responseModels/Project";
 
 export const fetchProjects = async (): Promise<Project[]> => {
     try {
-        const response = await getFromServer(PROJECTS_ENDPOINT);
+        const response = await getFromServer(GET_PROJECTS_ENDPOINT);
         const data = await response.json();
         return data as Project[];
     } catch (error) {
@@ -16,7 +16,7 @@ export const fetchProjects = async (): Promise<Project[]> => {
 
 export const createProject = async (project: CreateProjectRequest): Promise<Project> => {
     try {
-        const response = await postJsonToServer(PROJECTS_ENDPOINT, project);
+        const response = await postJsonToServer(CREATE_PROJECT_ENDPOINT, project);
         const data = await response.json();
         return data as Project;
     } catch (error) {

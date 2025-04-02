@@ -59,8 +59,8 @@ export default function SignIn() {
             //store user information  in Asyncstorage
             const tokenExpiry = new Date().getTime() + 3600 * 1000; // Assuming token expires in 1 hour
             const tokenWithExpiry = {
-                token: token,
-                expiry: tokenExpiry
+                [storageKeys.accessToken]: token,
+                [storageKeys.tokenExpiry]: tokenExpiry
             };
             await AsyncStorage.setItem(storageKeys.token, JSON.stringify(tokenWithExpiry));
             await AsyncStorage.setItem(storageKeys.user, JSON.stringify(user));

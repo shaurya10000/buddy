@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, SafeAreaView } from 'react-native'; // Import SafeAreaView and TextInput
 import { ButtonType1 } from '@/components/ButtonType1';
 import { EdittableRichTextBox1NoBoundary } from '@/components/EditableRichTextBoxNoBoundary';
@@ -6,8 +6,19 @@ import { createProjectHandler } from '@/handler/createProject';
 import { fullPageContainer } from '@/app/styles/common'; // Import fullPageContainer
 import { MAX_PROJECT_NAME_LENGTH, MAX_PROJECT_DESCRIPTION_LENGTH } from '@/app/pages/constants';
 import { PROJECT_NAME_TEXT, PROJECT_DESCRIPTION_TEXT, GENERATE_TASKS_SUBTASKS_BUTTON_TEXT } from '@/app/pages/LocalizationStrings';
+import { router } from 'expo-router';
+import { isAccessTokenValid } from '@/localStorage/accessToken';
 
 export default function CreateProject() {
+    // Go to SignInPage if user is not signed in
+    useEffect(() => {
+        isAccessTokenValid().then((isValid) => {
+            if (!isValid) {
+                router.replace('/sign-in');
+            }
+        });
+    }, []);
+
     const [name, setName] = useState(PROJECT_NAME_TEXT);
     const [description, setDescription] = useState(PROJECT_DESCRIPTION_TEXT);
 

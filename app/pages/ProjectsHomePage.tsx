@@ -6,8 +6,18 @@ import { fetchProjects } from '@/backend/projectService';
 import { Project } from '@/models/responseModels/Project';
 import { router } from 'expo-router';
 import { bottomFullWidthPlacement, fullPageContainer } from '@/app/styles/common';
+import { isAccessTokenValid } from '@/localStorage/accessToken';
 
 export default function ProjectsViewHomePage() {
+    // Go to SignInPage if user is not signed in
+    useEffect(() => {
+        isAccessTokenValid().then((isValid) => {
+            if (!isValid) {
+                router.replace('/sign-in');
+            }
+        });
+    }, []);
+
     const [projects, setProjects] = useState<Project[]>([]);
 
     useEffect(() => {
