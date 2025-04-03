@@ -35,9 +35,11 @@ export default function ProjectsViewHomePage() {
 
     return (
         <View style={styles.projectsViewHomePageContainer}>
-            {projects.map((project, index) => (
-                <Tile key={index} displayText={project.name} color={project.color} />
-            ))}
+            <View style={styles.projectsContainer}>
+                {projects.map((project, index) => (
+                    <Tile key={index} displayText={project.name} color={project.color} />
+                ))}
+            </View>
             <ButtonType1 displayText="Create Project" style={styles.createProjectButton} onPress={() => {
                 router.push('/pages/CreateProject');
             }} />
@@ -52,5 +54,12 @@ const styles = StyleSheet.create({
     createProjectButton: {
         ...bottomFullWidthPlacement,
         height: 51,
+    },
+    projectsContainer: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        overflow: 'scroll',
     }
 });

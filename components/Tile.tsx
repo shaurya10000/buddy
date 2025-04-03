@@ -23,17 +23,11 @@ const tileWidth = (Dimensions.get('window').width / 2) - 20;
 
 const styles = StyleSheet.create({
     projectContainer: {
-        position: "relative",
-        flexShrink: 0,
-        height: tileHeight,
-        width: tileWidth,
-        backgroundColor: "rgba(218, 87, 87, 1)",
+        flex: 1,
         display: "flex",
-        alignItems: "flex-start",
-        rowGap: 0,
-        marginLeft: 10,
-        marginRight: 10,
-        marginBottom: 10,
+        height: '48%',
+        minWidth: '48%',
+        backgroundColor: "rgba(218, 87, 87, 1)",
     },
     text: {
         // The flexShrink property specifies that the text should not shrink when there is not enough space.
