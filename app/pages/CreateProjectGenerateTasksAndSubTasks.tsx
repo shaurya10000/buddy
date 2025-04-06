@@ -5,7 +5,7 @@ import { EdittableRichTextBox1NoBoundary } from '@/components/EditableRichTextBo
 import { createProjectHandler } from '@/handler/createProject';
 import { fullPageContainer } from '@/app/styles/common'; // Import fullPageContainer
 import { MAX_PROJECT_NAME_LENGTH, MAX_PROJECT_DESCRIPTION_LENGTH } from '@/app/pages/constants';
-import { PROJECT_NAME_TEXT, PROJECT_DESCRIPTION_TEXT, GENERATE_TASKS_SUBTASKS_BUTTON_TEXT, REGENERATE_TASKS_SUBTASKS_BUTTON_TEXT } from '@/app/pages/LocalizationStrings';
+import { PROJECT_NAME_TEXT, PROJECT_DESCRIPTION_TEXT, REGENERATE_TASKS_SUBTASKS_BUTTON_TEXT } from '@/app/pages/LocalizationStrings';
 import { router } from 'expo-router';
 import { isAccessTokenValid } from '@/localStorage/accessToken';
 import { useSelector } from 'react-redux';
@@ -28,6 +28,14 @@ export default function CreateProject() {
 
     const tasksAndSubTasksReady = useSelector((state: any) => state.tasks.tasksAndSubTasksReady);
     const tasks = useSelector((state: any) => state.tasks.tasks);
+
+    // Add this useEffect to watch for changes
+    useEffect(() => {
+        if (tasksAndSubTasksReady) {
+            // Add any additional logic you want to run when tasks are ready
+            console.log('Tasks and subtasks are now ready:', tasks);
+        }
+    }, [tasksAndSubTasksReady, tasks]);
 
     return (
         <SafeAreaView style={styles.safeArea}>

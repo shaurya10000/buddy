@@ -2,26 +2,33 @@
 
 import { DraftProjectTask } from "@/models/requestModels/DraftProjectTask";
 import { router } from "expo-router";
-import { xSetState } from "react-native-redux"
+import { setTasks, setTasksAndSubTasksReady } from "@/redux/slices/tasksSlice";
 
-
-export const generateTasksAndSubTasksHandler = async (projectName: string, projectDescription: string): Promise<void> => {
-    // Use Redux to store the tasks
-    xSetState({tasksAndSubTasksReady: false});
+// https://medium.com/@honorablehilary/redux-toolkits-slice-in-a-react-native-project-2745b1872e9f
+// helped configure the redux store and the slices correctly
+export const generateTasksAndSubTasksHandler = async (
+    projectName: string,
+    projectDescription: string,
+    dispatch: any  // Add dispatch as a parameter
+): Promise<void> => {
+    // Use the passed dispatch instead of useDispatch hook
+    dispatch(setTasksAndSubTasksReady(false));
 
     // Use React Router to navigate to the CreateProjectGenerateTasksAndSubTasks page
     router.push('/pages/CreateProjectGenerateTasksAndSubTasks');
-    
-    // Generate the tasks and sub-tasks in the background
+
+    // Generate the tasks and sub-tasks
     const tasks = await generateTasksAndSubTasks(projectName, projectDescription);
+
     // Use Redux to store the tasks
-    xSetState({
-        tasks: tasks,
-        tasksAndSubTasksReady: true,
-    });
+    dispatch(setTasks(tasks));
+    dispatch(setTasksAndSubTasksReady(true));
 }
 
 export const generateTasksAndSubTasks = async (projectName: string, projectDescription: string): Promise<DraftProjectTask[]> => {
+    // Wait for 1 second to simulate the tasks and sub-tasks being generated
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
     // Dummy tasks and sub-tasks
     const tasks: DraftProjectTask[] = [
         {
