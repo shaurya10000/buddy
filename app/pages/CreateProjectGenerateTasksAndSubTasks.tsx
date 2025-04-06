@@ -11,7 +11,8 @@ import { isAccessTokenValid } from '@/localStorage/accessToken';
 import { useSelector } from 'react-redux';
 import { ProjectTask } from '@/models/responseModels/ProjectTask';
 import { ProjectTaskSubtask } from '@/models/responseModels/ProjectTaskSubtask';
-import { ProjectTaskOrSubTask } from '@/components/ProjectTaskOrSubTask';
+import { ProjectTaskComponent } from '@/components/ProjectTaskComponent';
+import { ProjectTaskSubTaskComponent } from '@/components/ProjectTaskSubTaskComponent';
 
 export default function CreateProject() {
     // Go to SignInPage if user is not signed in
@@ -25,6 +26,7 @@ export default function CreateProject() {
 
     const [name, setName] = useState(PROJECT_NAME_TEXT);
     const [description, setDescription] = useState(PROJECT_DESCRIPTION_TEXT);
+    const [taskCheckedStates, setTaskCheckedStates] = useState<{[key: string]: boolean}>({});
 
     const tasksAndSubTasksReady = useSelector((state: any) => state.tasks.tasksAndSubTasksReady);
     const tasks = useSelector((state: any) => state.tasks.tasks);
@@ -50,9 +52,28 @@ export default function CreateProject() {
                         <View>
                             {tasks.map((task: ProjectTask) => (
                                 <View key={task.id}>
-                                    <ProjectTaskOrSubTask id={task.id} name={task.name} description={task.description} />
+                                    <ProjectTaskComponent 
+                                        style={styles.taskContainer} 
+                                        id={task.id} 
+                                        name={task.name} 
+                                        description={task.description}
+                                        isChecked={taskCheckedStates[task.id] ?? true}
+                                        onCheckChange={(checked) => {
+                                            setTaskCheckedStates(prev => ({
+                                                ...prev,
+                                                [task.id]: checked
+                                            }));
+                                        }}
+                                    />
                                     {task.subtasks.map((subTask: ProjectTaskSubtask) => (
-                                        <ProjectTaskOrSubTask key={subTask.id} id={subTask.id} name={subTask.name} description={subTask.description} />
+                                        <ProjectTaskSubTaskComponent 
+                                            key={subTask.id} 
+                                            style={styles.subTaskContainer} 
+                                            id={subTask.id} 
+                                            name={subTask.name} 
+                                            description={subTask.description}
+                                            isTaskChecked={taskCheckedStates[task.id] ?? true}
+                                        />
                                     ))}
                                 </View>
                             ))}
@@ -124,4 +145,20 @@ const styles = StyleSheet.create({
     projectDescriptionTextInput: {
         flex: 1,
     },
+    taskContainer: {
+        width: '80%',
+        height: 32,
+        backgroundColor: 'darkgray',
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginLeft: '10%',
+    },
+    subTaskContainer: {
+        width: '70%',
+        height: 32,
+        backgroundColor: 'lightgray',
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginLeft: '20%',
+    }
 });
