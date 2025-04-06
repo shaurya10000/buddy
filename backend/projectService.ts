@@ -1,6 +1,6 @@
 import { getFromServer, postJsonToServer } from "@/backend/commons";
 import { CREATE_PROJECT_ENDPOINT, GET_PROJECTS_ENDPOINT } from "@/backend/config/constants";
-import { CreateProjectRequest } from "@/models/requestModels/CreateProjectRequest";
+import { CreateProjectRequest } from "@/models/requestModels/DraftProject";
 import { Project } from "@/models/responseModels/Project";
 
 export const fetchProjects = async (): Promise<Project[]> => {

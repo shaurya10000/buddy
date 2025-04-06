@@ -47,7 +47,7 @@ export default function SignIn() {
     const getUserInfo = async (token: string | undefined) => {
         //absent token
         if (!token) return;
-        
+
         try {
             const response = await fetch(
                 "https://www.googleapis.com/userinfo/v2/me",
@@ -72,8 +72,8 @@ export default function SignIn() {
             await populateRemindersInLocalStorageFromServer();
 
             // Redirect to ProjectsHomePage after successful authentication
-            router.replace('/pages/ProjectsHomePage');
-            
+            router.replace('/pages/ProjectsHome');
+
         } catch (error) {
             console.error(
                 "Failed to fetch user data:",
@@ -87,37 +87,10 @@ export default function SignIn() {
     console.log(JSON.stringify(userInfo))
 
     return (
-        <GestureHandlerRootView style={styles.container}>
-            <View style={{ padding: 10, flex: 1, justifyContent: 'center' }}>
-                <View style={{}}>
-                    <Button title="sign in with google" onPress={() => { promptAsync() }} />
-                </View>
+        <View style={{ padding: 10, flex: 1, justifyContent: 'center', backgroundColor: '#25292e' }}>
+            <View style={{ width: '20%', alignSelf: 'center' }}>
+                <Button title="sign in with google" onPress={() => { promptAsync() }} />
             </View>
-        </GestureHandlerRootView>
+        </View>
     );
 }
-
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#25292e',
-        alignItems: 'center',
-    },
-    imageContainer: {
-        flex: 1,
-        paddingTop: 28,
-    },
-    footerContainer: {
-        flex: 1 / 3,
-        alignItems: 'center',
-    },
-    optionsContainer: {
-        position: 'absolute',
-        bottom: 80,
-    },
-    optionsRow: {
-        alignItems: 'center',
-        flexDirection: 'row',
-    },
-});

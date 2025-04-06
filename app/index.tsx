@@ -1,7 +1,8 @@
+import React from 'react';
 import { StyleSheet } from "react-native";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import ProjectsViewHomePage from '@/app/pages/ProjectsHomePage';
+import ProjectsHome from '@/app/pages/ProjectsHome';
 import { router } from "expo-router";
 import { isAccessTokenValid } from "@/localStorage/accessToken";
 
@@ -13,10 +14,10 @@ export default function Index() {
       }
     });
   }, [router]);
-  
+
   return (
     <GestureHandlerRootView style={styles.container}>
-      <ProjectsViewHomePage />
+      <ProjectsHome />
     </GestureHandlerRootView>
   );
 }
