@@ -7,5 +7,5 @@ import { DraftProjectTaskSubtask } from "@/models/requestModels/DraftProjectTask
 export interface DraftProjectTask extends DraftWorkItem {
     assignee: User; // Must be one of the users with who the project is shared
     projectId: string;
-    subtasks: DraftProjectTaskSubtask[];
+    subtasks?: DraftProjectTaskSubtask[];
 }

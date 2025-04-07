@@ -9,8 +9,8 @@ export interface ProjectTaskProps {
   /** Used to locate this view in end-to-end tests. */
   testID?: string,
   style?: any,
-  isChecked?: boolean,
-  onCheckChange?: (checked: boolean) => void,
+  isChecked: boolean,
+  onCheckChange: (checked: boolean) => void,
 }
 
 export function ProjectTaskComponent(props: ProjectTaskProps) {
@@ -21,14 +21,16 @@ export function ProjectTaskComponent(props: ProjectTaskProps) {
       <Text style={stylesheet.text} testID="78:267">
         {props.name}
       </Text>
-      <CheckBox
-        testID="78:269"
-        checked={isChecked}
-        onPress={() => {
-          setIsChecked(!isChecked);
-          props.onCheckChange(!isChecked);
-        }}
-      />
+      <View style={stylesheet.checkBoxContainer}>
+        <CheckBox
+          testID="78:269"
+          checked={isChecked}
+          onPress={() => {
+            setIsChecked(!isChecked);
+            props.onCheckChange(!isChecked);
+          }}
+        />
+      </View>
     </View>
   );
 }
@@ -40,7 +42,8 @@ const stylesheet = StyleSheet.create({
     backgroundColor: 'darkgray',
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: '10%'
+    marginLeft: '10%',
+    overflow: 'scroll',
   },
   text: {
     color: 'rgba(0, 0, 0, 1)',
@@ -49,5 +52,11 @@ const stylesheet = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '400',
     marginLeft: 10,
+    overflow: 'scroll',
   },
+  checkBoxContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  }
 });

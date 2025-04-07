@@ -75,6 +75,88 @@ export const generateTasksAndSubTasks = async (projectName: string, projectDescr
                     description: 'Description 1',
                     projectTaskId: '2',
                 },
+                {
+                    id: '22',
+                    name: 'SubTask 2',
+                    description: 'Description 2',
+                    projectTaskId: '2',
+                },
+                {
+                    id: '23',
+                    name: 'SubTask 3',
+                    description: 'Description 3',
+                    projectTaskId: '2',
+                },
+                {
+                    id: '24',
+                    name: 'SubTask 4',
+                    description: 'Description 4',
+                    projectTaskId: '2',
+                },
+            ],
+        },
+        {
+            id: '3',
+            name: 'Task 3',
+            description: 'Description 3',
+            projectId: '1',
+            assignee: {
+                id: '1',
+                name: 'John Doe',
+                email: 'john.doe@example.com',
+                profilePicture: 'https://via.placeholder.com/150',
+            },
+            subtasks: [
+                {
+                    id: '31',
+                    name: 'SubTask 1',
+                    description: 'Description 1',
+                    projectTaskId: '3',
+                },
+            ],
+        },
+        {
+            id: '4',
+            name: 'Task 1 for Task 5 Long Name XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+            description: 'Description 4',
+            projectId: '1',
+            assignee: {
+                id: '1',
+                name: 'John Doe',
+                email: 'john.doe@example.com',
+                profilePicture: 'https://via.placeholder.com/150',
+            },
+        },
+        {
+            id: '5',
+            name: 'Task 5',
+            description: 'Description 5',
+            projectId: '1',
+            assignee: {
+                id: '1',
+                name: 'John Doe',
+                email: 'john.doe@example.com',
+                profilePicture: 'https://via.placeholder.com/150',
+            },
+            subtasks: [
+                {
+                    id: '51',
+                    name: 'SubTask 1 for Task 5 Long Name XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+                    description: 'Description 1',
+                    projectTaskId: '5',
+                },
+                {
+                    id: '52',
+                    name: 'SubTask 2',
+                    description: 'Description 2',
+                    projectTaskId: '5',
+                },
+                {
+                    id: '53',
+                    name: 'SubTask 3',
+                    description: 'Description 3',
+                    projectTaskId: '5',
+                },
             ],
         },
     ];

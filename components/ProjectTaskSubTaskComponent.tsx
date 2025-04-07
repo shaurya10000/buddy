@@ -20,25 +20,31 @@ export function ProjectTaskSubTaskComponent(props: ProjectTaskSubTaskProps) {
       <Text style={stylesheet.text} testID="78:267">
         {props.name}
       </Text>
-      <CheckBox
-        testID="78:269"
-        checked={isChecked && props.isTaskChecked}
-        onPress={() => {
-          setIsChecked(!isChecked);
-        }}
-      />
+      <View style={stylesheet.checkBoxContainer}>
+        <CheckBox
+          testID="78:269"
+          checked={isChecked && props.isTaskChecked}
+          onPress={() => {
+            if (props.isTaskChecked) {
+              setIsChecked(!isChecked);
+            }
+          }}
+        />
+      </View>
     </View>
   );
 }
 
 const stylesheet = StyleSheet.create({
   container: {
-    width: '70%',
+    width: '75%',
     height: 32,
     backgroundColor: 'lightgray',
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: '20%'
+    marginLeft: '20%',
+    marginRight: '5%',
+    overflow: 'scroll',
   },
   text: {
     color: 'rgba(0, 0, 0, 1)',
@@ -47,5 +53,12 @@ const stylesheet = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '400',
     marginLeft: 10,
+    flexWrap: 'wrap',
+    overflow: 'scroll',
   },
+  checkBoxContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  }
 });

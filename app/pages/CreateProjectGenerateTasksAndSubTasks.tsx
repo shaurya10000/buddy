@@ -26,7 +26,7 @@ export default function CreateProject() {
 
     const [name, setName] = useState(PROJECT_NAME_TEXT);
     const [description, setDescription] = useState(PROJECT_DESCRIPTION_TEXT);
-    const [taskCheckedStates, setTaskCheckedStates] = useState<{[key: string]: boolean}>({});
+    const [taskCheckedStates, setTaskCheckedStates] = useState<{ [key: string]: boolean }>({});
 
     const tasksAndSubTasksReady = useSelector((state: any) => state.tasks.tasksAndSubTasksReady);
     const tasks = useSelector((state: any) => state.tasks.tasks);
@@ -52,10 +52,10 @@ export default function CreateProject() {
                         <View>
                             {tasks.map((task: ProjectTask) => (
                                 <View key={task.id}>
-                                    <ProjectTaskComponent 
-                                        style={styles.taskContainer} 
-                                        id={task.id} 
-                                        name={task.name} 
+                                    <ProjectTaskComponent
+                                        style={styles.taskContainer}
+                                        id={task.id}
+                                        name={task.name}
                                         description={task.description}
                                         isChecked={taskCheckedStates[task.id] ?? true}
                                         onCheckChange={(checked) => {
@@ -65,12 +65,12 @@ export default function CreateProject() {
                                             }));
                                         }}
                                     />
-                                    {task.subtasks.map((subTask: ProjectTaskSubtask) => (
-                                        <ProjectTaskSubTaskComponent 
-                                            key={subTask.id} 
-                                            style={styles.subTaskContainer} 
-                                            id={subTask.id} 
-                                            name={subTask.name} 
+                                    {task.subtasks?.map((subTask: ProjectTaskSubtask) => (
+                                        <ProjectTaskSubTaskComponent
+                                            key={subTask.id}
+                                            style={styles.subTaskContainer}
+                                            id={subTask.id}
+                                            name={subTask.name}
                                             description={subTask.description}
                                             isTaskChecked={taskCheckedStates[task.id] ?? true}
                                         />
@@ -130,6 +130,9 @@ const styles = StyleSheet.create({
     generatedTasksAndSubTasksContainer: {
         flex: 1, // remaining space is divided between the projectDescription and generatedTasksAndSubTasksContainer
         flexDirection: 'column',
+        // flexWrap determines whether the children should wrap onto multiple lines or not
+        flexWrap: 'wrap',
+        overflow: 'scroll',
     },
     projectDescription: {
         flex: 1, // remaining space is divided between the projectDescription and generatedTasksAndSubTasksContainer
