@@ -38,12 +38,12 @@ export function ProjectTaskComponent(props: ProjectTaskProps) {
 const stylesheet = StyleSheet.create({
   container: {
     width: '80%',
-    height: 32,
     backgroundColor: 'darkgray',
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: '10%',
     overflow: 'scroll',
+    flexWrap: 'wrap', // Allow the container to wrap its content
   },
   text: {
     color: 'rgba(0, 0, 0, 1)',
@@ -53,6 +53,7 @@ const stylesheet = StyleSheet.create({
     fontWeight: '400',
     marginLeft: 10,
     overflow: 'scroll',
+    flexWrap: 'wrap', // Allow the text to wrap its content
   },
   checkBoxContainer: {
     flex: 1,

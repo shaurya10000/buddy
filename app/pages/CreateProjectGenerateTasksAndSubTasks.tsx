@@ -48,36 +48,33 @@ export default function CreateProject() {
                 <View style={styles.generatedTasksAndSubTasksContainer}>
                     {!tasksAndSubTasksReady ? (
                         <ActivityIndicator size="large" color="#0000ff" />
-                    ) : (
-                        <View>
-                            {tasks.map((task: ProjectTask) => (
-                                <View key={task.id}>
-                                    <ProjectTaskComponent
-                                        style={styles.taskContainer}
-                                        id={task.id}
-                                        name={task.name}
-                                        description={task.description}
-                                        isChecked={taskCheckedStates[task.id] ?? true}
-                                        onCheckChange={(checked) => {
-                                            setTaskCheckedStates(prev => ({
-                                                ...prev,
-                                                [task.id]: checked
-                                            }));
-                                        }}
-                                    />
-                                    {task.subtasks?.map((subTask: ProjectTaskSubtask) => (
-                                        <ProjectTaskSubTaskComponent
-                                            key={subTask.id}
-                                            style={styles.subTaskContainer}
-                                            id={subTask.id}
-                                            name={subTask.name}
-                                            description={subTask.description}
-                                            isTaskChecked={taskCheckedStates[task.id] ?? true}
-                                        />
-                                    ))}
-                                </View>
+                    ) : (tasks.map((task: ProjectTask) => (
+                        <View key={task.id}>
+                            <ProjectTaskComponent
+                                style={styles.taskContainer}
+                                id={task.id}
+                                name={task.name}
+                                description={task.description}
+                                isChecked={taskCheckedStates[task.id] ?? true}
+                                onCheckChange={(checked) => {
+                                    setTaskCheckedStates(prev => ({
+                                        ...prev,
+                                        [task.id]: checked
+                                    }));
+                                }}
+                            />
+                            {task.subtasks?.map((subTask: ProjectTaskSubtask) => (
+                                <ProjectTaskSubTaskComponent
+                                    key={subTask.id}
+                                    style={styles.subTaskContainer}
+                                    id={subTask.id}
+                                    name={subTask.name}
+                                    description={subTask.description}
+                                    isTaskChecked={taskCheckedStates[task.id] ?? true}
+                                />
                             ))}
                         </View>
+                    ))
                     )}
                 </View>
                 <ButtonType1 displayText={REGENERATE_TASKS_SUBTASKS_BUTTON_TEXT} style={styles.generateTasksSubTasksButton} onPress={() => {
@@ -130,8 +127,6 @@ const styles = StyleSheet.create({
     generatedTasksAndSubTasksContainer: {
         flex: 1, // remaining space is divided between the projectDescription and generatedTasksAndSubTasksContainer
         flexDirection: 'column',
-        // flexWrap determines whether the children should wrap onto multiple lines or not
-        flexWrap: 'wrap',
         overflow: 'scroll',
     },
     projectDescription: {
