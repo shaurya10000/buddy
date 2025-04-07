@@ -26,8 +26,9 @@ export function ProjectTaskComponent(props: ProjectTaskProps) {
           testID="78:269"
           checked={isChecked}
           onPress={() => {
-            setIsChecked(!isChecked);
-            props.onCheckChange(!isChecked);
+            const newCheckedState = !isChecked;
+            setIsChecked(newCheckedState);
+            props.onCheckChange(newCheckedState);
           }}
         />
       </View>

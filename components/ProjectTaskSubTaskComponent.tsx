@@ -10,6 +10,7 @@ export interface ProjectTaskSubTaskProps {
   testID?: string,
   style?: any,
   isTaskChecked?: boolean,
+  onCheckChange: (checked: boolean) => void,
 }
 
 export function ProjectTaskSubTaskComponent(props: ProjectTaskSubTaskProps) {
@@ -26,7 +27,9 @@ export function ProjectTaskSubTaskComponent(props: ProjectTaskSubTaskProps) {
           checked={isChecked && props.isTaskChecked}
           onPress={() => {
             if (props.isTaskChecked) {
-              setIsChecked(!isChecked);
+              const newCheckedState = !isChecked;
+              setIsChecked(newCheckedState);
+              props.onCheckChange(newCheckedState);
             }
           }}
         />

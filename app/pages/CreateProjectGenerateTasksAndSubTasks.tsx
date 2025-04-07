@@ -46,7 +46,21 @@ export default function CreateProject() {
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.createProjectContainer}>
                 <ButtonType1 displayText="Create" style={styles.createProjectButton} onPress={() => {
-                    createProjectHandler(name, description);
+                    const tasksToCreate = tasks.filter((task: ProjectTask) => {
+                        if (taskCheckedStates[task.id] === undefined || taskCheckedStates[task.id] === true) {
+                            return {
+                                id: task.id,
+                                name: task.name,
+                                description: task.description,
+                                projectId: '',
+                                assignee: task.assignee,
+                                subtasks: task.subtasks?.filter((subtask: ProjectTaskSubtask) => {
+                                    return taskCheckedStates[subtask.id] === undefined || taskCheckedStates[subtask.id] === true;
+                                }) ?? [],
+                            };
+                        }
+                    });
+                    createProjectHandler(name, description, tasksToCreate);
                 }} />
                 <View style={styles.generatedTasksAndSubTasksContainer}>
                     {!tasksAndSubTasksReady ? (
@@ -74,6 +88,12 @@ export default function CreateProject() {
                                     name={subTask.name}
                                     description={subTask.description}
                                     isTaskChecked={taskCheckedStates[task.id] ?? true}
+                                    onCheckChange={(checked) => {
+                                        setTaskCheckedStates(prev => ({
+                                            ...prev,
+                                            [subTask.id]: checked
+                                        }));
+                                    }}
                                 />
                             ))}
                         </View>
@@ -81,7 +101,6 @@ export default function CreateProject() {
                     )}
                 </View>
                 <ButtonType1 displayText={REGENERATE_TASKS_SUBTASKS_BUTTON_TEXT} style={styles.generateTasksSubTasksButton} onPress={() => {
-                    console.log('Regenerate Tasks & SubTasks for project: ', name, ' and description: ', description);
                     generateTasksAndSubTasksHandler(name, description, dispatch);
                 }} />
                 <EdittableRichTextBox1NoBoundary

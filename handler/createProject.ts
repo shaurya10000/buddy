@@ -1,19 +1,22 @@
 import { createProject } from '@/backend/projectService';
-import { CreateProjectRequest } from '@/models/requestModels/DraftProject';
+import { DraftProject } from '@/models/requestModels/DraftProject';
+import { DraftProjectTask } from '@/models/requestModels/DraftProjectTask';
 import { Project } from '@/models/responseModels/Project';
 
-export const createProjectHandler = async (name: string, description: string): Promise<Project> => {
+export const createProjectHandler = async (name: string, description: string, tasks?: DraftProjectTask[]): Promise<Project> => {
     if (!name || !description) {
         throw new Error('Name and description are required');
     }
 
     try {
-        const createProjectRequest: CreateProjectRequest = {
+        const createProjectRequest: DraftProject = {
+            id: '',
             name,
             description,
-            tasks: [],
+            tasks: tasks ?? [],
             color: '#FFFFFF', // Default color, can be changed later
         };
+        console.log('createProjectRequest', createProjectRequest);
 
         const project = await createProject(createProjectRequest);
 
