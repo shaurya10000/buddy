@@ -150,13 +150,19 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginLeft: '10%',
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: 'white',
     },
     subTaskContainer: {
-        width: '70%',
+        width: '80%',
         height: 32,
         backgroundColor: 'lightgray',
         flexDirection: 'row',
         alignItems: 'center',
         marginLeft: '20%',
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: 'white',
     }
 });
