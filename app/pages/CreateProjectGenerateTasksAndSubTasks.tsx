@@ -8,11 +8,12 @@ import { MAX_PROJECT_NAME_LENGTH, MAX_PROJECT_DESCRIPTION_LENGTH } from '@/app/p
 import { PROJECT_NAME_TEXT, PROJECT_DESCRIPTION_TEXT, REGENERATE_TASKS_SUBTASKS_BUTTON_TEXT } from '@/app/pages/LocalizationStrings';
 import { router } from 'expo-router';
 import { isAccessTokenValid } from '@/localStorage/accessToken';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ProjectTask } from '@/models/responseModels/ProjectTask';
 import { ProjectTaskSubtask } from '@/models/responseModels/ProjectTaskSubtask';
 import { ProjectTaskComponent } from '@/components/ProjectTaskComponent';
 import { ProjectTaskSubTaskComponent } from '@/components/ProjectTaskSubTaskComponent';
+import { generateTasksAndSubTasksHandler } from '@/handler/generateTasksAndSubTasks';
 
 export default function CreateProject() {
     // Go to SignInPage if user is not signed in
@@ -30,6 +31,8 @@ export default function CreateProject() {
 
     const tasksAndSubTasksReady = useSelector((state: any) => state.tasks.tasksAndSubTasksReady);
     const tasks = useSelector((state: any) => state.tasks.tasks);
+
+    const dispatch = useDispatch();
 
     // Add this useEffect to watch for changes
     useEffect(() => {
@@ -79,6 +82,7 @@ export default function CreateProject() {
                 </View>
                 <ButtonType1 displayText={REGENERATE_TASKS_SUBTASKS_BUTTON_TEXT} style={styles.generateTasksSubTasksButton} onPress={() => {
                     console.log('Regenerate Tasks & SubTasks for project: ', name, ' and description: ', description);
+                    generateTasksAndSubTasksHandler(name, description, dispatch);
                 }} />
                 <EdittableRichTextBox1NoBoundary
                     style={styles.projectDescription}
