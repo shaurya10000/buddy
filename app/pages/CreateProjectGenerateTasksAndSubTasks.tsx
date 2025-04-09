@@ -14,6 +14,8 @@ import { ProjectTaskSubtask } from '@/models/responseModels/ProjectTaskSubtask';
 import { ProjectTaskComponent } from '@/components/ProjectTaskComponent';
 import { ProjectTaskSubTaskComponent } from '@/components/ProjectTaskSubTaskComponent';
 import { generateTasksAndSubTasksHandler } from '@/handler/generateTasksAndSubTasks';
+import { DraftProjectTask } from '@/models/requestModels/DraftProjectTask';
+import { DraftProjectTaskSubtask } from '@/models/requestModels/DraftProjectTaskSubtask';
 
 export default function CreateProject() {
     // Go to SignInPage if user is not signed in
@@ -46,19 +48,19 @@ export default function CreateProject() {
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.createProjectContainer}>
                 <ButtonType1 displayText="Create" style={styles.createProjectButton} onPress={() => {
-                    const tasksToCreate = tasks.filter((task: ProjectTask) => {
-                        if (taskCheckedStates[task.id] === undefined || taskCheckedStates[task.id] === true) {
-                            return {
-                                id: task.id,
-                                name: task.name,
-                                description: task.description,
-                                projectId: '',
-                                assignee: task.assignee,
-                                subtasks: task.subtasks?.filter((subtask: ProjectTaskSubtask) => {
-                                    return taskCheckedStates[subtask.id] === undefined || taskCheckedStates[subtask.id] === true;
-                                }) ?? [],
-                            };
-                        }
+                    const tasksToCreate: DraftProjectTask[] = tasks.filter((task: DraftProjectTask) => {
+                        return taskCheckedStates[task.id] === undefined || taskCheckedStates[task.id] === true;
+                    }).map((task: DraftProjectTask) => {
+                        return {
+                            id: task.id,
+                            name: task.name,
+                            description: task.description,
+                            projectId: task.projectId,
+                            assignee: task.assignee,
+                            subtasks: task.subtasks?.filter((subtask: DraftProjectTaskSubtask) => {
+                                return taskCheckedStates[subtask.id] === undefined || taskCheckedStates[subtask.id] === true;
+                            }) ?? [],
+                        };
                     });
                     createProjectHandler(name, description, tasksToCreate);
                 }} />
