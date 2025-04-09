@@ -3,14 +3,14 @@ import { DraftProject } from '@/models/requestModels/DraftProject';
 import { DraftProjectTask } from '@/models/requestModels/DraftProjectTask';
 import { Project } from '@/models/responseModels/Project';
 
-export const createProjectHandler = async (name: string, description: string, tasks?: DraftProjectTask[]): Promise<Project> => {
+export const createProjectHandler = async (projectId: string, name: string, description: string, tasks?: DraftProjectTask[]): Promise<Project> => {
     if (!name || !description) {
         throw new Error('Name and description are required');
     }
 
     try {
         const createProjectRequest: DraftProject = {
-            id: '',
+            id: projectId,
             name,
             description,
             tasks: tasks ?? [],

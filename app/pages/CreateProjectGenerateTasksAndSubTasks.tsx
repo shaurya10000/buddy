@@ -16,6 +16,7 @@ import { ProjectTaskSubTaskComponent } from '@/components/ProjectTaskSubTaskComp
 import { generateTasksAndSubTasksHandler } from '@/handler/generateTasksAndSubTasks';
 import { DraftProjectTask } from '@/models/requestModels/DraftProjectTask';
 import { DraftProjectTaskSubtask } from '@/models/requestModels/DraftProjectTaskSubtask';
+import { generateProjectId } from '@/utils/projectUtils';
 
 export default function CreateProject() {
     // Go to SignInPage if user is not signed in
@@ -48,7 +49,9 @@ export default function CreateProject() {
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.createProjectContainer}>
                 <ButtonType1 displayText="Create" style={styles.createProjectButton} onPress={() => {
+                    let projectId = generateProjectId();
                     const tasksToCreate: DraftProjectTask[] = tasks.filter((task: DraftProjectTask) => {
+                        projectId = task.projectId;
                         return taskCheckedStates[task.id] === undefined || taskCheckedStates[task.id] === true;
                     }).map((task: DraftProjectTask) => {
                         return {
@@ -62,7 +65,7 @@ export default function CreateProject() {
                             }) ?? [],
                         };
                     });
-                    createProjectHandler(name, description, tasksToCreate);
+                    createProjectHandler(projectId, name, description, tasksToCreate);
                 }} />
                 <View style={styles.generatedTasksAndSubTasksContainer}>
                     {!tasksAndSubTasksReady ? (

@@ -10,6 +10,8 @@ import { router } from 'expo-router';
 import { isAccessTokenValid } from '@/localStorage/accessToken';
 import { generateTasksAndSubTasksHandler } from '@/handler/generateTasksAndSubTasks';
 import { useDispatch } from 'react-redux';
+import { generateProjectId } from '@/utils/projectUtils';
+
 export default function CreateProject() {
     // Go to SignInPage if user is not signed in
     useEffect(() => {
@@ -23,12 +25,12 @@ export default function CreateProject() {
     const [name, setName] = useState(PROJECT_NAME_TEXT);
     const [description, setDescription] = useState(PROJECT_DESCRIPTION_TEXT);
     const dispatch = useDispatch();
-    
+
     return (
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.createProjectContainer}>
                 <ButtonType1 displayText="Create" style={styles.createProjectButton} onPress={() => {
-                    createProjectHandler(name, description);
+                    createProjectHandler(generateProjectId(), name, description);
                 }} />
                 <ButtonType1 displayText={GENERATE_TASKS_SUBTASKS_BUTTON_TEXT} style={styles.generateTasksSubTasksButton} onPress={() => {
                     generateTasksAndSubTasksHandler(name, description, dispatch);
