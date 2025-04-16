@@ -1,11 +1,12 @@
 // Redux store
 
 import { configureStore } from '@reduxjs/toolkit';
-import tasksReducer from '@/redux/slices/tasksSlice'; // Import the tasksReducer
-
+import draftProjectTasksReducer from '@/redux/slices/draftProjectTasksSlice'; // Import the tasksReducer
+import committedProjectTasksReducer from '@/redux/slices/committedProjectTasksSlice'; // Import the tasksReducer
 const store = configureStore({
   reducer: {
-    tasks: tasksReducer, // Use the imported tasksReducer
+    draftProjectTasks: draftProjectTasksReducer, // Use the imported tasksReducer
+    committedProjectTasks: committedProjectTasksReducer, // Use the imported tasksReducer
   },
   devTools: true, //process.env.NODE_ENV !== 'production', // Enable only in development
 });

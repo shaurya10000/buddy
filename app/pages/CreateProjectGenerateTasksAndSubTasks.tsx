@@ -5,18 +5,19 @@ import { EdittableRichTextBox1NoBoundary } from '@/components/EditableRichTextBo
 import { createProjectHandler } from '@/handler/createProject';
 import { fullPageContainer } from '@/app/styles/common'; // Import fullPageContainer
 import { MAX_PROJECT_NAME_LENGTH, MAX_PROJECT_DESCRIPTION_LENGTH } from '@/app/pages/constants';
-import { PROJECT_NAME_TEXT, PROJECT_DESCRIPTION_TEXT, REGENERATE_TASKS_SUBTASKS_BUTTON_TEXT } from '@/app/pages/LocalizationStrings';
+import { PROJECT_NAME_TEXT, PROJECT_DESCRIPTION_TEXT, REGENERATE_TASKS_SUBTASKS_BUTTON_TEXT, CREATE_BUTTON_TEXT } from '@/app/pages/LocalizationStrings';
 import { router } from 'expo-router';
 import { isAccessTokenValid } from '@/localStorage/accessToken';
 import { useDispatch, useSelector } from 'react-redux';
 import { ProjectTask } from '@/models/responseModels/ProjectTask';
 import { ProjectTaskSubtask } from '@/models/responseModels/ProjectTaskSubtask';
-import { ProjectTaskComponent } from '@/components/ProjectTaskComponent';
-import { ProjectTaskSubTaskComponent } from '@/components/ProjectTaskSubTaskComponent';
+import { DraftProjectTaskComponent } from '@/components/DraftProjectTaskComponent';
+import { DraftProjectTaskSubTaskComponent } from '@/components/DraftProjectTaskSubTaskComponent';
 import { generateTasksAndSubTasksHandler } from '@/handler/generateTasksAndSubTasks';
 import { DraftProjectTask } from '@/models/requestModels/DraftProjectTask';
 import { DraftProjectTaskSubtask } from '@/models/requestModels/DraftProjectTaskSubtask';
 import { generateProjectId } from '@/utils/projectUtils';
+import { RootState } from '@/redux/store';
 
 export default function CreateProject() {
     // Go to SignInPage if user is not signed in
@@ -32,23 +33,23 @@ export default function CreateProject() {
     const [description, setDescription] = useState(PROJECT_DESCRIPTION_TEXT);
     const [taskCheckedStates, setTaskCheckedStates] = useState<{ [key: string]: boolean }>({});
 
-    const tasksAndSubTasksReady = useSelector((state: any) => state.tasks.tasksAndSubTasksReady);
-    const tasks = useSelector((state: any) => state.tasks.tasks);
+    const draftTasksAndSubTasksReady = useSelector((state: RootState) => state.draftProjectTasks.draftTasksAndSubTasksReady);
+    const tasks = useSelector((state: RootState) => state.draftProjectTasks.tasks);
 
     const dispatch = useDispatch();
 
     // Add this useEffect to watch for changes
     useEffect(() => {
-        if (tasksAndSubTasksReady) {
+        if (draftTasksAndSubTasksReady) {
             // Add any additional logic you want to run when tasks are ready
             console.log('Tasks and subtasks are now ready:', tasks);
         }
-    }, [tasksAndSubTasksReady, tasks]);
+    }, [draftTasksAndSubTasksReady, tasks]);
 
     return (
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.createProjectContainer}>
-                <ButtonType1 displayText="Create" style={styles.createProjectButton} onPress={() => {
+                <ButtonType1 displayText={CREATE_BUTTON_TEXT} style={styles.createProjectButton} onPress={() => {
                     let projectId = generateProjectId();
                     const tasksToCreate: DraftProjectTask[] = tasks.filter((task: DraftProjectTask) => {
                         projectId = task.projectId;
@@ -65,14 +66,14 @@ export default function CreateProject() {
                             }) ?? [],
                         };
                     });
-                    createProjectHandler(projectId, name, description, tasksToCreate);
+                    createProjectHandler(projectId, name, description, dispatch, tasksToCreate);
                 }} />
                 <View style={styles.generatedTasksAndSubTasksContainer}>
-                    {!tasksAndSubTasksReady ? (
+                    {!draftTasksAndSubTasksReady ? (
                         <ActivityIndicator size="large" color="#0000ff" />
-                    ) : (tasks.map((task: ProjectTask) => (
+                    ) : (tasks.map((task: DraftProjectTask) => (
                         <View key={task.id}>
-                            <ProjectTaskComponent
+                            <DraftProjectTaskComponent
                                 style={styles.taskContainer}
                                 id={task.id}
                                 name={task.name}
@@ -85,8 +86,8 @@ export default function CreateProject() {
                                     }));
                                 }}
                             />
-                            {task.subtasks?.map((subTask: ProjectTaskSubtask) => (
-                                <ProjectTaskSubTaskComponent
+                            {task.subtasks?.map((subTask: DraftProjectTaskSubtask) => (
+                                <DraftProjectTaskSubTaskComponent
                                     key={subTask.id}
                                     style={styles.subTaskContainer}
                                     id={subTask.id}

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import React, { useState } from 'react';
 
@@ -9,30 +9,18 @@ export interface ProjectTaskProps {
   /** Used to locate this view in end-to-end tests. */
   testID?: string,
   style?: any,
-  isChecked: boolean,
-  onCheckChange: (checked: boolean) => void,
+  onPress: () => void,
 }
 
 export function ProjectTaskComponent(props: ProjectTaskProps) {
-  const [isChecked, setIsChecked] = useState(props.isChecked);
-
   return (
-    <View style={[stylesheet.container, props.style]} testID={props.testID ?? "78:271"}>
-      <Text style={stylesheet.text} testID="78:267">
-        {props.name}
-      </Text>
-      <View style={stylesheet.checkBoxContainer}>
-        <CheckBox
-          testID="78:269"
-          checked={isChecked}
-          onPress={() => {
-            const newCheckedState = !isChecked;
-            setIsChecked(newCheckedState);
-            props.onCheckChange(newCheckedState);
-          }}
-        />
+    <Pressable onPress={props.onPress}>
+      <View style={[stylesheet.container, props.style]} testID={props.testID ?? "78:271"}>
+        <Text style={stylesheet.text} testID="78:267">
+          {props.name}
+        </Text>
       </View>
-    </View>
+    </Pressable>
   );
 }
 
@@ -56,9 +44,4 @@ const stylesheet = StyleSheet.create({
     overflow: 'scroll',
     flexWrap: 'wrap', // Allow the text to wrap its content
   },
-  checkBoxContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  }
 });

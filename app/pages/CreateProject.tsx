@@ -5,7 +5,7 @@ import { EdittableRichTextBox1NoBoundary } from '@/components/EditableRichTextBo
 import { createProjectHandler } from '@/handler/createProject';
 import { fullPageContainer } from '@/app/styles/common'; // Import fullPageContainer
 import { MAX_PROJECT_NAME_LENGTH, MAX_PROJECT_DESCRIPTION_LENGTH } from '@/app/pages/constants';
-import { PROJECT_NAME_TEXT, PROJECT_DESCRIPTION_TEXT, GENERATE_TASKS_SUBTASKS_BUTTON_TEXT } from '@/app/pages/LocalizationStrings';
+import { PROJECT_NAME_TEXT, PROJECT_DESCRIPTION_TEXT, GENERATE_TASKS_SUBTASKS_BUTTON_TEXT, CREATE_BUTTON_TEXT } from '@/app/pages/LocalizationStrings';
 import { router } from 'expo-router';
 import { isAccessTokenValid } from '@/localStorage/accessToken';
 import { generateTasksAndSubTasksHandler } from '@/handler/generateTasksAndSubTasks';
@@ -29,8 +29,8 @@ export default function CreateProject() {
     return (
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.createProjectContainer}>
-                <ButtonType1 displayText="Create" style={styles.createProjectButton} onPress={() => {
-                    createProjectHandler(generateProjectId(), name, description);
+                <ButtonType1 displayText={CREATE_BUTTON_TEXT} style={styles.createProjectButton} onPress={() => {
+                    createProjectHandler(generateProjectId(), name, description, dispatch);
                 }} />
                 <ButtonType1 displayText={GENERATE_TASKS_SUBTASKS_BUTTON_TEXT} style={styles.generateTasksSubTasksButton} onPress={() => {
                     generateTasksAndSubTasksHandler(name, description, dispatch);

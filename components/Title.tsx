@@ -2,16 +2,16 @@ import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { Svg, Path } from 'react-native-svg';
 
-export interface TileProps {
+export interface TitleProps {
     displayText: string,
     color: string,
     /** Used to locate this view in end-to-end tests. */
     testID?: string,
 }
 
-export default function Tile(props: TileProps) {
+export default function Title(props: TitleProps) {
     return (
-        <View style={[styles.projectContainer, { backgroundColor: props.color }]} testID={props.testID ?? "47:29"}>
+        <View style={[styles.titleContainer, { backgroundColor: props.color }]} testID={props.testID ?? "47:29"}>
             <Text style={styles.text} testID="7:38">
             {props.displayText}
             </Text>
@@ -19,11 +19,8 @@ export default function Tile(props: TileProps) {
 }
 
 const styles = StyleSheet.create({
-    projectContainer: {
-        flex: 1,
+    titleContainer: {
         display: "flex",
-        height: '48%',
-        minWidth: '48%',
         backgroundColor: "rgba(218, 87, 87, 1)",
     },
     text: {

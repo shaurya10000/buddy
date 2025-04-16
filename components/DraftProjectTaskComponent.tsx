@@ -2,19 +2,19 @@ import { View, Text, StyleSheet } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import React, { useState } from 'react';
 
-export interface ProjectTaskSubTaskProps {
+export interface DraftProjectTaskProps {
   id: string,
   name: string,
   description: string,
   /** Used to locate this view in end-to-end tests. */
   testID?: string,
   style?: any,
-  isTaskChecked?: boolean,
+  isChecked: boolean,
   onCheckChange: (checked: boolean) => void,
 }
 
-export function ProjectTaskSubTaskComponent(props: ProjectTaskSubTaskProps) {
-  const [isChecked, setIsChecked] = useState(props.isTaskChecked);
+export function DraftProjectTaskComponent(props: DraftProjectTaskProps) {
+  const [isChecked, setIsChecked] = useState(props.isChecked);
 
   return (
     <View style={[stylesheet.container, props.style]} testID={props.testID ?? "78:271"}>
@@ -24,13 +24,11 @@ export function ProjectTaskSubTaskComponent(props: ProjectTaskSubTaskProps) {
       <View style={stylesheet.checkBoxContainer}>
         <CheckBox
           testID="78:269"
-          checked={isChecked && props.isTaskChecked}
+          checked={isChecked}
           onPress={() => {
-            if (props.isTaskChecked) {
-              const newCheckedState = !isChecked;
-              setIsChecked(newCheckedState);
-              props.onCheckChange(newCheckedState);
-            }
+            const newCheckedState = !isChecked;
+            setIsChecked(newCheckedState);
+            props.onCheckChange(newCheckedState);
           }}
         />
       </View>
@@ -40,14 +38,13 @@ export function ProjectTaskSubTaskComponent(props: ProjectTaskSubTaskProps) {
 
 const stylesheet = StyleSheet.create({
   container: {
-    width: '75%',
-    height: 32,
-    backgroundColor: 'lightgray',
+    width: '80%',
+    backgroundColor: 'darkgray',
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: '20%',
-    marginRight: '5%',
+    marginLeft: '10%',
     overflow: 'scroll',
+    flexWrap: 'wrap', // Allow the container to wrap its content
   },
   text: {
     color: 'rgba(0, 0, 0, 1)',
@@ -56,8 +53,8 @@ const stylesheet = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '400',
     marginLeft: 10,
-    flexWrap: 'wrap',
     overflow: 'scroll',
+    flexWrap: 'wrap', // Allow the text to wrap its content
   },
   checkBoxContainer: {
     flex: 1,
