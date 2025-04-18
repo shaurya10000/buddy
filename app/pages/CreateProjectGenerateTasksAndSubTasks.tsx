@@ -9,8 +9,6 @@ import { PROJECT_NAME_TEXT, PROJECT_DESCRIPTION_TEXT, REGENERATE_TASKS_SUBTASKS_
 import { router } from 'expo-router';
 import { isAccessTokenValid } from '@/localStorage/accessToken';
 import { useDispatch, useSelector } from 'react-redux';
-import { ProjectTask } from '@/models/responseModels/ProjectTask';
-import { ProjectTaskSubtask } from '@/models/responseModels/ProjectTaskSubtask';
 import { DraftProjectTaskComponent } from '@/components/DraftProjectTaskComponent';
 import { DraftProjectTaskSubTaskComponent } from '@/components/DraftProjectTaskSubTaskComponent';
 import { generateTasksAndSubTasksHandler } from '@/handler/generateTasksAndSubTasks';

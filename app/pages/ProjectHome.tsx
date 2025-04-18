@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, SafeAreaView, ActivityIndicator } from 'react-native'; // Import SafeAreaView and TextInput
 import { ButtonType1 } from '@/components/ButtonType1';
-import { fullPageContainer } from '@/app/styles/common'; // Import fullPageContainer
+import { bottomHalfWidthPlacement, fullPageContainer } from '@/app/styles/common'; // Import fullPageContainer
 import { PROJECT_NAME_TEXT, PROJECT_DESCRIPTION_TEXT, SUMMARIZE_BUTTON_TEXT, CREATE_TASK_BUTTON_TEXT } from '@/app/pages/LocalizationStrings';
 import { router, useLocalSearchParams } from 'expo-router';
 import { isAccessTokenValid } from '@/localStorage/accessToken';
@@ -11,19 +11,22 @@ import { ProjectTaskComponent } from '@/components/ProjectTaskComponent';
 import { RootState } from '@/redux/store';
 import { ProjectTask } from '@/models/responseModels/ProjectTask';
 import { Project } from '@/models/responseModels/Project';
+import { ProjectTaskSubtask } from '@/models/responseModels/ProjectTaskSubtask';
+import { ProjectTaskSubTaskComponent } from '@/components/ProjectTaskSubTaskComponent';
+
 export default function ProjectHome() {
     // Get projectId from URL params
     const { projectId } = useLocalSearchParams<{ projectId: string }>();
 
     // Get project from Redux
-    const project: Project | null = useSelector((state: RootState) => 
+    const project: Project | null = useSelector((state: RootState) =>
         state.committedProjectTasks.projects[projectId] ?? null
     );
     // Get tasks for this specific project from Redux
-    const projectTasks: Record<string, ProjectTask> = useSelector((state: RootState) => 
+    const projectTasks: Record<string, ProjectTask> = useSelector((state: RootState) =>
         state.committedProjectTasks.tasksByProjectId[projectId] ?? {}
     );
-    const isTasksReady: boolean = useSelector((state: RootState) => 
+    const isTasksReady: boolean = useSelector((state: RootState) =>
         state.committedProjectTasks.readyStateByProjectId[projectId] ?? false
     );
 
@@ -49,33 +52,49 @@ export default function ProjectHome() {
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            <View style={styles.projectTitle}>
-                <ButtonType1 displayText={SUMMARIZE_BUTTON_TEXT} style={styles.summarizeButton} onPress={() => {
-                    console.log('summarize project');
+            <View style={styles.projectsViewHomePageContainer}>
+                <ButtonType1 key={projectId} displayText={project?.name ?? PROJECT_NAME_TEXT} style={styles.projectName} onPress={() => {
+                    console.log('Display Project Details Button');
                 }} />
-                <ButtonType1 displayText={CREATE_TASK_BUTTON_TEXT} style={styles.createTaskButton} onPress={() => {
-                    console.log('create task');
-                }} />
-            </View>
-            <View style={styles.projectContainer}>
-                {!isTasksReady ? (
-                    <ActivityIndicator size="large" color="#0000ff" />
-                ) : (
-                    Object.values(projectTasks).map((task: ProjectTask) => (
-                        <ProjectTaskComponent
-                            key={task.id}
-                            id={task.id}
-                            name={task.name}
-                            description={task.description}
-                            onPress={() => {
-                                console.log('task 1');
-                            }}
-                        />
-                    ))
-                )}
-            </View>
-            <View style={styles.projectTitle}>
-                <Title key={projectId} displayText={name} color={project?.color} />
+                <View style={styles.projectTasksContainer}>
+                    {!isTasksReady ? (
+                        <ActivityIndicator size="large" color="#0000ff" />
+                    ) : (
+                        Object.values(projectTasks).map((task: ProjectTask) => (
+                            <View key={task.id}>
+                                <ProjectTaskComponent
+                                    style={styles.taskContainer}
+                                    id={task.id}
+                                    name={task.name}
+                                    description={task.description}
+                                    onPress={() => {
+                                        console.log('task clicked:', task.id);
+                                    }}
+                                />
+                                {task.subtasks?.map((subtask: ProjectTaskSubtask) => (
+                                    <ProjectTaskSubTaskComponent
+                                        key={subtask.id}
+                                        style={styles.subTaskContainer}
+                                        id={subtask.id}
+                                        name={subtask.name}
+                                        description={subtask.description}
+                                        onPress={() => {
+                                            console.log('subtask clicked:', subtask.id);
+                                        }}
+                                    />
+                                ))}
+                            </View>
+                        ))
+                    )}
+                </View>
+                <View style={styles.bottomContainer}>
+                    <ButtonType1 displayText={SUMMARIZE_BUTTON_TEXT} style={styles.summarizeButton} onPress={() => {
+                        console.log('summarize project');
+                    }} />
+                    <ButtonType1 displayText={CREATE_TASK_BUTTON_TEXT} style={styles.createTaskButton} onPress={() => {
+                        console.log('create task');
+                    }} />
+                </View>
             </View>
         </SafeAreaView>
     );
@@ -85,49 +104,51 @@ const styles = StyleSheet.create({
     safeArea: {
         flex: 1, // Ensure SafeAreaView takes full screen
     },
-    projectTaskContainer: {
-        width: '80%',
+    projectsViewHomePageContainer: {
+        ...fullPageContainer,
+        flexDirection: 'column',
+    },
+    createTaskButton: {
+        ...bottomHalfWidthPlacement,
+        height: 51,
+    },
+    summarizeButton: {
+        ...bottomHalfWidthPlacement,
+        height: 51,
+    },
+    projectTasksContainer: {
+        flex: 1, // remaining space is divided between the projectDescription and generatedTasksAndSubTasksContainer
+        flexDirection: 'column',
+        overflow: 'scroll',
+    },
+    taskContainer: {
+        width: '100%',
         height: 32,
         backgroundColor: 'darkgray',
         flexDirection: 'row',
         alignItems: 'center',
-        marginLeft: '10%',
         borderRadius: 5,
         borderWidth: 1,
         borderColor: 'white',
     },
-    projectContainer: {
-        ...fullPageContainer,
-        display: 'flex',
-        flex: 1, // Ensure container takes full screen
-        flexDirection: 'column-reverse',
+    subTaskContainer: {
+        width: '95%',
+        marginLeft: '5%',
+        height: 32,
+        backgroundColor: 'darkgray',
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: 'white',
     },
-    summarizeButton: {
-        height: 50,
-        minWidth: '48%',
-    },
-    createTaskButton: {
-        height: 50,
-        minWidth: '48%',
-    },
-    projectDescription: {
-        flex: 1,
+    bottomContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
     },
     projectName: {
         height: 25,
         // align self to left
         alignSelf: 'flex-start',
-    },
-    projectNameTextInput: {
-        flex: 1,
-    },
-    projectDescriptionTextInput: {
-        flex: 1,
-    },
-    projectTitle: {
-        display: 'flex',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        overflow: 'scroll',
     }
 });

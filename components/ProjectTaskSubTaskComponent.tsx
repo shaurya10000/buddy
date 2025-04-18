@@ -1,18 +1,17 @@
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { CheckBox } from 'react-native-elements';
-import React, { useState } from 'react';
 
-export interface ProjectTaskProps {
+export interface ProjectTaskSubTaskProps {
   id: string,
   name: string,
   description: string,
   /** Used to locate this view in end-to-end tests. */
   testID?: string,
   style?: any,
+  isTaskChecked?: boolean,
   onPress: () => void,
 }
 
-export function ProjectTaskComponent(props: ProjectTaskProps) {
+export function ProjectTaskSubTaskComponent(props: ProjectTaskSubTaskProps) {
   return (
     <Pressable onPress={props.onPress}>
       <View style={[stylesheet.container, props.style]} testID={props.testID ?? "78:271"}>
@@ -26,12 +25,13 @@ export function ProjectTaskComponent(props: ProjectTaskProps) {
 
 const stylesheet = StyleSheet.create({
   container: {
-    width: '80%',
-    backgroundColor: 'darkgray',
+    width: '90%',
+    height: 32,
+    backgroundColor: 'lightgray',
     flexDirection: 'row',
     alignItems: 'center',
+    marginLeft: '5%',
     overflow: 'scroll',
-    flexWrap: 'wrap', // Allow the container to wrap its content
   },
   text: {
     color: 'rgba(0, 0, 0, 1)',
@@ -40,7 +40,12 @@ const stylesheet = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: '400',
     marginLeft: 10,
+    flexWrap: 'wrap',
     overflow: 'scroll',
-    flexWrap: 'wrap', // Allow the text to wrap its content
   },
+  checkBoxContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  }
 });

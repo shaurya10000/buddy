@@ -9,6 +9,12 @@ export const bottomFullWidthPlacement: ViewStyle = {
     width: '100%'
 };
 
+export const bottomHalfWidthPlacement: ViewStyle = {
+    flex: 1,
+    display: 'flex',
+    minWidth: '48%'
+};
+
 export const fullPageContainer: ViewStyle = {
     flex: 1,
     display: "flex",
