@@ -17,7 +17,7 @@ import { DraftProjectTaskSubtask } from '@/models/requestModels/DraftProjectTask
 import { generateProjectId } from '@/utils/projectUtils';
 import { RootState } from '@/redux/store';
 
-export default function CreateProject() {
+export default function CreateProjectGenerateTasksAndSubTasks() {
     // Go to SignInPage if user is not signed in
     useEffect(() => {
         isAccessTokenValid().then((isValid) => {
@@ -27,9 +27,11 @@ export default function CreateProject() {
         });
     }, []);
 
+    const [taskCheckedStates, setTaskCheckedStates] = useState<{ [key: string]: boolean }>({});
+
+    const draftProject = useSelector((state: RootState) => state.draftProjectTasks.project);
     const [name, setName] = useState(PROJECT_NAME_TEXT);
     const [description, setDescription] = useState(PROJECT_DESCRIPTION_TEXT);
-    const [taskCheckedStates, setTaskCheckedStates] = useState<{ [key: string]: boolean }>({});
 
     const draftTasksAndSubTasksReady = useSelector((state: RootState) => state.draftProjectTasks.draftTasksAndSubTasksReady);
     const tasks = useSelector((state: RootState) => state.draftProjectTasks.tasks);
@@ -42,13 +44,17 @@ export default function CreateProject() {
             // Add any additional logic you want to run when tasks are ready
             console.log('Tasks and subtasks are now ready:', tasks);
         }
-    }, [draftTasksAndSubTasksReady, tasks]);
+        if (draftProject) {
+            setName(draftProject.name);
+            setDescription(draftProject.description);
+        }
+    }, [draftTasksAndSubTasksReady, tasks, draftProject]);
 
     return (
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.createProjectContainer}>
                 <ButtonType1 displayText={CREATE_BUTTON_TEXT} style={styles.createProjectButton} onPress={() => {
-                    let projectId = generateProjectId();
+                    let projectId = '';
                     const tasksToCreate: DraftProjectTask[] = tasks.filter((task: DraftProjectTask) => {
                         projectId = task.projectId;
                         return taskCheckedStates[task.id] === undefined || taskCheckedStates[task.id] === true;
@@ -124,7 +130,8 @@ export default function CreateProject() {
                     textInputProps={
                         {
                             initialValue: PROJECT_NAME_TEXT,
-                            value: name, onChangeText: setName,
+                            value: name,
+                            onChangeText: setName,
                             maxLength: MAX_PROJECT_NAME_LENGTH,
                             multiline: true,
                             styles: styles.projectNameTextInput

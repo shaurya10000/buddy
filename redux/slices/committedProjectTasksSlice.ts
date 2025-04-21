@@ -4,12 +4,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface ProjectTasksState {
   projects: Record<string, Project>;
+  readyThumbnailStateByProjectId: Record<string, boolean>;
   tasksByProjectId: Record<string, Record<string, ProjectTask>>;
   readyStateByProjectId: Record<string, boolean>;
 }
 
 const initialState: ProjectTasksState = {
   projects: {},
+  readyThumbnailStateByProjectId: {},
   tasksByProjectId: {},
   readyStateByProjectId: {},
 };
@@ -20,13 +22,14 @@ export const committedProjectTasksSlice = createSlice({
   reducers: {
     setCommittedProjects: (
       state,
-      action: PayloadAction<{ projects: Record<string, Project> }>
+      action: PayloadAction<Record<string, Project>>
     ) => {
-      const { projects } = action.payload;
+      const projects = action.payload;
       for (const projectId in projects) {
         state.projects[projectId] = projects[projectId];
       }
     },
+
     setCommittedProjectTasks: (
       state,
       action: PayloadAction<{ projectId: string; tasks: Record<string, ProjectTask> }>
@@ -34,6 +37,7 @@ export const committedProjectTasksSlice = createSlice({
       const { projectId, tasks } = action.payload;
       state.tasksByProjectId[projectId] = tasks;
     },
+
     updateCommittedProjectTask: (
       state,
       action: PayloadAction<{ projectId: string; taskId: string; task: ProjectTask }>
@@ -41,6 +45,7 @@ export const committedProjectTasksSlice = createSlice({
       const { projectId, taskId, task } = action.payload;
       state.tasksByProjectId[projectId][taskId] = task;
     },
+
     setCommittedProjectTasksAndSubTasksReady: (
       state,
       action: PayloadAction<{ projectId: string; isReady: boolean }>
@@ -48,13 +53,24 @@ export const committedProjectTasksSlice = createSlice({
       const { projectId, isReady } = action.payload;
       state.readyStateByProjectId[projectId] = isReady;
     },
+
+    setReadyThumbnailStateByProjectId: (
+      state,
+      action: PayloadAction<Record<string, boolean>>
+    ) => {
+      const readyStateByProjectId = action.payload;
+      for (const projectId in readyStateByProjectId) {
+        state.readyThumbnailStateByProjectId[projectId] = readyStateByProjectId[projectId];
+      }
+    },
   },
 });
 
 export const { 
   setCommittedProjects,
   setCommittedProjectTasks, 
-  setCommittedProjectTasksAndSubTasksReady 
+  setCommittedProjectTasksAndSubTasksReady,
+  setReadyThumbnailStateByProjectId
 } = committedProjectTasksSlice.actions;
 
 export default committedProjectTasksSlice.reducer;

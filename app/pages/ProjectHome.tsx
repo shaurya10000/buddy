@@ -6,14 +6,13 @@ import { PROJECT_NAME_TEXT, PROJECT_DESCRIPTION_TEXT, SUMMARIZE_BUTTON_TEXT, CRE
 import { router, useLocalSearchParams } from 'expo-router';
 import { isAccessTokenValid } from '@/localStorage/accessToken';
 import { useDispatch, useSelector } from 'react-redux';
-import Title from '@/components/Title';
 import { ProjectTaskComponent } from '@/components/ProjectTaskComponent';
 import { RootState } from '@/redux/store';
 import { ProjectTask } from '@/models/responseModels/ProjectTask';
 import { Project } from '@/models/responseModels/Project';
 import { ProjectTaskSubtask } from '@/models/responseModels/ProjectTaskSubtask';
 import { ProjectTaskSubTaskComponent } from '@/components/ProjectTaskSubTaskComponent';
-
+import { projectDetailsHandler } from '@/handler/projectDetails';
 export default function ProjectHome() {
     // Get projectId from URL params
     const { projectId } = useLocalSearchParams<{ projectId: string }>();
@@ -54,7 +53,7 @@ export default function ProjectHome() {
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.projectsViewHomePageContainer}>
                 <ButtonType1 key={projectId} displayText={project?.name ?? PROJECT_NAME_TEXT} style={styles.projectName} onPress={() => {
-                    console.log('Display Project Details Button');
+                    projectDetailsHandler(projectId);
                 }} />
                 <View style={styles.projectTasksContainer}>
                     {!isTasksReady ? (

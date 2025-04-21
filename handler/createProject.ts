@@ -40,9 +40,7 @@ export const createProjectHandler = async (
 
         // Update the project with id projectId in the redux store using passed dispatch
         dispatch(setCommittedProjects({
-            projects: {
-                [projectId]: project
-            }
+            [projectId]: project
         }));
         dispatch(setCommittedProjectTasks({
             projectId,

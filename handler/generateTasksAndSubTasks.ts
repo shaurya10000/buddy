@@ -2,7 +2,9 @@
 
 import { DraftProjectTask } from "@/models/requestModels/DraftProjectTask";
 import { router } from "expo-router";
-import { setDraftProjectTasks, setDraftProjectTasksAndSubTasksReady } from "@/redux/slices/draftProjectTasksSlice";
+import { setDraftProjectTasks, setDraftProjectTasksAndSubTasksReady, setDraftProject } from "@/redux/slices/draftProjectTasksSlice";
+import { DraftProject } from "@/models/requestModels/DraftProject";
+import { generateProjectId, generateProjectTaskId, generateProjectSubTaskId } from "@/utils/projectUtils";
 
 // https://medium.com/@honorablehilary/redux-toolkits-slice-in-a-react-native-project-2745b1872e9f
 // helped configure the redux store and the slices correctly
@@ -18,24 +20,36 @@ export const generateTasksAndSubTasksHandler = async (
     router.push('/pages/CreateProjectGenerateTasksAndSubTasks');
 
     // Generate the tasks and sub-tasks
-    const tasks = await generateTasksAndSubTasks(projectName, projectDescription);
+    const project: DraftProject = localCreateDraftProject(projectName, projectDescription);
+    const tasks = await generateTasksAndSubTasks(project);
 
-    // Use Redux to store the tasks
+    // Use Redux to store the project and tasks
+    dispatch(setDraftProject(project));
     dispatch(setDraftProjectTasks(tasks));
     dispatch(setDraftProjectTasksAndSubTasksReady(true));
 }
 
-export const generateTasksAndSubTasks = async (projectName: string, projectDescription: string): Promise<DraftProjectTask[]> => {
+const localCreateDraftProject = (projectName: string, projectDescription: string): DraftProject => {
+    return {
+        id: generateProjectId(),
+        name: projectName,
+        description: projectDescription,
+        tasks: [],
+        color: '#000000',
+    };
+}
+
+export const generateTasksAndSubTasks = async (project: DraftProject): Promise<DraftProjectTask[]> => {
     // Wait for 1 second to simulate the tasks and sub-tasks being generated
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Dummy tasks and sub-tasks
     const tasks: DraftProjectTask[] = [
         {
-            id: '1',
+            id: generateProjectTaskId(),
             name: 'Task 1',
             description: 'Description 1',
-            projectId: '1',
+            projectId: project.id,
             assignee: {
                 id: '1',
                 name: 'John Doe',
@@ -44,13 +58,13 @@ export const generateTasksAndSubTasks = async (projectName: string, projectDescr
             },
             subtasks: [
                 {
-                    id: '11',
+                    id: generateProjectSubTaskId(),
                     name: 'SubTask 1',
                     description: 'Description 1',
                     projectTaskId: '1',
                 },
                 {
-                    id: '12',
+                    id: generateProjectSubTaskId(),
                     name: 'SubTask 2',
                     description: 'Description 2',
                     projectTaskId: '1',
@@ -58,10 +72,10 @@ export const generateTasksAndSubTasks = async (projectName: string, projectDescr
             ],
         },
         {
-            id: '2',
+            id: generateProjectTaskId(),
             name: 'Task 2',
             description: 'Description 2',
-            projectId: '1',
+            projectId: project.id,
             assignee: {
                 id: '1',
                 name: 'John Doe',
@@ -70,25 +84,25 @@ export const generateTasksAndSubTasks = async (projectName: string, projectDescr
             },
             subtasks: [
                 {
-                    id: '21',
+                    id: generateProjectSubTaskId(),
                     name: 'SubTask 1',
                     description: 'Description 1',
                     projectTaskId: '2',
                 },
                 {
-                    id: '22',
+                    id: generateProjectSubTaskId(),
                     name: 'SubTask 2',
                     description: 'Description 2',
                     projectTaskId: '2',
                 },
                 {
-                    id: '23',
+                    id: generateProjectSubTaskId(),
                     name: 'SubTask 3',
                     description: 'Description 3',
                     projectTaskId: '2',
                 },
                 {
-                    id: '24',
+                    id: generateProjectSubTaskId(),
                     name: 'SubTask 4',
                     description: 'Description 4',
                     projectTaskId: '2',
@@ -96,10 +110,10 @@ export const generateTasksAndSubTasks = async (projectName: string, projectDescr
             ],
         },
         {
-            id: '3',
+            id: generateProjectTaskId(),
             name: 'Task 3',
             description: 'Description 3',
-            projectId: '1',
+            projectId: project.id,
             assignee: {
                 id: '1',
                 name: 'John Doe',
@@ -108,7 +122,7 @@ export const generateTasksAndSubTasks = async (projectName: string, projectDescr
             },
             subtasks: [
                 {
-                    id: '31',
+                    id: generateProjectSubTaskId(),
                     name: 'SubTask 1',
                     description: 'Description 1',
                     projectTaskId: '3',
@@ -116,10 +130,10 @@ export const generateTasksAndSubTasks = async (projectName: string, projectDescr
             ],
         },
         {
-            id: '4',
+            id: generateProjectTaskId(),
             name: 'Task 1 for Task 5 Long Name XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
             description: 'Description 4',
-            projectId: '1',
+            projectId: project.id,
             assignee: {
                 id: '1',
                 name: 'John Doe',
@@ -128,10 +142,10 @@ export const generateTasksAndSubTasks = async (projectName: string, projectDescr
             },
         },
         {
-            id: '5',
+            id: generateProjectTaskId(),
             name: 'Task 5',
             description: 'Description 5',
-            projectId: '1',
+            projectId: project.id,
             assignee: {
                 id: '1',
                 name: 'John Doe',
@@ -140,19 +154,19 @@ export const generateTasksAndSubTasks = async (projectName: string, projectDescr
             },
             subtasks: [
                 {
-                    id: '51',
+                    id: generateProjectSubTaskId(),
                     name: 'SubTask 1 for Task 5 Long Name XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
                     description: 'Description 1',
                     projectTaskId: '5',
                 },
                 {
-                    id: '52',
+                    id: generateProjectSubTaskId(),
                     name: 'SubTask 2',
                     description: 'Description 2',
                     projectTaskId: '5',
                 },
                 {
-                    id: '53',
+                    id: generateProjectSubTaskId(),
                     name: 'SubTask 3',
                     description: 'Description 3',
                     projectTaskId: '5',

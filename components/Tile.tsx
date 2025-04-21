@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Pressable } from 'react-native';
 import { Svg, Path } from 'react-native-svg';
 
 export interface TileProps {
@@ -7,15 +7,17 @@ export interface TileProps {
     color: string,
     /** Used to locate this view in end-to-end tests. */
     testID?: string,
+    onPress: () => void,
 }
 
 export default function Tile(props: TileProps) {
     return (
-        <View style={[styles.projectContainer, { backgroundColor: props.color }]} testID={props.testID ?? "47:29"}>
+        <Pressable onPress={props.onPress} style={[styles.projectContainer, { backgroundColor: props.color }]}>
             <Text style={styles.text} testID="7:38">
-            {props.displayText}
+                {props.displayText}
             </Text>
-        </View>  )
+        </Pressable>
+    )
 }
 
 const styles = StyleSheet.create({
