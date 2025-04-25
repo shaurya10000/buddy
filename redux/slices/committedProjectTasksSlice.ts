@@ -5,7 +5,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface ProjectTasksState {
   projects: Record<string, Project>;
   readyThumbnailStateByProjectId: Record<string, boolean>;
-  tasksByProjectId: Record<string, Record<string, ProjectTask>>;
+  tasksByProjectId: Record<string, ProjectTask[]>;
   readyStateByProjectId: Record<string, boolean>;
 }
 
@@ -32,7 +32,7 @@ export const committedProjectTasksSlice = createSlice({
 
     setCommittedProjectTasks: (
       state,
-      action: PayloadAction<{ projectId: string; tasks: Record<string, ProjectTask> }>
+      action: PayloadAction<{ projectId: string; tasks: ProjectTask[] }>
     ) => {
       const { projectId, tasks } = action.payload;
       state.tasksByProjectId[projectId] = tasks;
@@ -43,7 +43,11 @@ export const committedProjectTasksSlice = createSlice({
       action: PayloadAction<{ projectId: string; taskId: string; task: ProjectTask }>
     ) => {
       const { projectId, taskId, task } = action.payload;
-      state.tasksByProjectId[projectId][taskId] = task;
+      const tasks = state.tasksByProjectId[projectId];
+      const index = tasks.findIndex(t => t.id === taskId);
+      if (index !== -1) {
+        tasks[index] = task;
+      }
     },
 
     setCommittedProjectTasksAndSubTasksReady: (

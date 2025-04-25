@@ -35,10 +35,16 @@ export default function ProjectMetadata() {
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            <ButtonType1 displayText={ARCHIVE_BUTTON_TEXT} style={styles.archiveProjectButton} onPress={() => {
-                archiveProjectHandler(projectId, dispatch);
-            }} />
-            <View style={styles.archiveProjectButton}>
+            <View style={styles.projectName}>
+                <Text style={styles.projectNameTextInput}>{project?.name ?? PROJECT_NAME_TEXT}</Text>
+            </View>
+            <View style={styles.projectDetailsContainer}>
+                <View style={styles.leftColumnContainer}>
+
+                </View>
+                <View style={styles.rightColumnContainer}>
+
+                </View>
                 <EdittableRichTextBox1NoBoundary
                     style={styles.projectDescription}
                     textInputProps={
@@ -62,10 +68,10 @@ export default function ProjectMetadata() {
                             styles: styles.projectNameTextInput
                         }}
                 />
-                <View style={styles.projectName}>
-                    <Text style={styles.projectNameTextInput}>{project?.name ?? PROJECT_NAME_TEXT}</Text>
-                </View>
             </View>
+            <ButtonType1 displayText={ARCHIVE_BUTTON_TEXT} style={styles.archiveProjectButton} onPress={() => {
+                archiveProjectHandler(projectId, dispatch);
+            }} />
         </SafeAreaView>
     );
 }
@@ -73,7 +79,7 @@ export default function ProjectMetadata() {
 const styles = StyleSheet.create({
     safeArea: {
         ...fullPageContainer,
-        flexDirection: 'column-reverse',
+        flexDirection: 'column',
     },
     createProjectContainer: {
         ...fullPageContainer,
@@ -86,6 +92,20 @@ const styles = StyleSheet.create({
     },
     archiveProjectButton: {
         height: 50,
+    },
+    projectDetailsContainer: {
+        flex: 1,
+        flexDirection: 'row',
+    },
+    leftColumnContainer: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    rightColumnContainer: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
     },
     projectDescription: {
         flex: 1,

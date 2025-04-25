@@ -22,8 +22,8 @@ export default function ProjectHome() {
         state.committedProjectTasks.projects[projectId] ?? null
     );
     // Get tasks for this specific project from Redux
-    const projectTasks: Record<string, ProjectTask> = useSelector((state: RootState) =>
-        state.committedProjectTasks.tasksByProjectId[projectId] ?? {}
+    const projectTasks: ProjectTask[] = useSelector((state: RootState) =>
+        state.committedProjectTasks.tasksByProjectId[projectId] ?? []
     );
     const isTasksReady: boolean = useSelector((state: RootState) =>
         state.committedProjectTasks.readyStateByProjectId[projectId] ?? false
@@ -59,31 +59,38 @@ export default function ProjectHome() {
                     {!isTasksReady ? (
                         <ActivityIndicator size="large" color="#0000ff" />
                     ) : (
-                        Object.values(projectTasks).map((task: ProjectTask) => (
-                            <View key={task.id}>
-                                <ProjectTaskComponent
-                                    style={styles.taskContainer}
-                                    id={task.id}
-                                    name={task.name}
-                                    description={task.description}
-                                    onPress={() => {
-                                        console.log('task clicked:', task.id);
-                                    }}
-                                />
-                                {task.subtasks?.map((subtask: ProjectTaskSubtask) => (
-                                    <ProjectTaskSubTaskComponent
-                                        key={subtask.id}
-                                        style={styles.subTaskContainer}
-                                        id={subtask.id}
-                                        name={subtask.name}
-                                        description={subtask.description}
+                        console.log('projectTasks type:', typeof projectTasks, Array.isArray(projectTasks) ? 'array' : 'not array'),
+                        Array.isArray(projectTasks) && projectTasks.map((task: ProjectTask) => {
+                            console.log(task);
+                            return (
+                                <View key={task.id}>
+                                    <ProjectTaskComponent
+                                        style={styles.taskContainer}
+                                        id={task.id}
+                                        name={task.name}
+                                        description={task.description}
                                         onPress={() => {
-                                            console.log('subtask clicked:', subtask.id);
+                                            console.log('task clicked:', task.id);
                                         }}
                                     />
-                                ))}
-                            </View>
-                        ))
+                                    {Array.isArray(task?.subtasks) && task.subtasks.map((subtask: ProjectTaskSubtask) => {
+                                        console.log(subtask);
+                                        return (
+                                            <ProjectTaskSubTaskComponent
+                                                key={subtask.id}
+                                                style={styles.subTaskContainer}
+                                                id={subtask.id}
+                                                name={subtask.name}
+                                                description={subtask.description}
+                                                onPress={() => {
+                                                    console.log('subtask clicked:', subtask.id);
+                                                }}
+                                            />
+                                        );
+                                    })}
+                                </View>
+                            );
+                        })
                     )}
                 </View>
                 <View style={styles.bottomContainer}>

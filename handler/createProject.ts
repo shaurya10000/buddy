@@ -44,10 +44,7 @@ export const createProjectHandler = async (
         }));
         dispatch(setCommittedProjectTasks({
             projectId,
-            tasks: project.tasks.reduce((acc, task) => {
-                acc[task.id] = task;
-                return acc;
-            }, {} as Record<string, ProjectTask>)
+            tasks: project.tasks
         }));
         dispatch(setCommittedProjectTasksAndSubTasksReady({
             projectId,
