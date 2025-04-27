@@ -12,5 +12,6 @@ export interface WorkItem {
     createdAt: Date;
     createdBy: string;
     updatedAt: Date;
+    dueDate: Date;
     comments: Comment[]; // This can be just a list of comment ids
 }

@@ -11,8 +11,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Project } from '@/models/responseModels/Project';
 import { RootState } from '@/redux/store';
 import { archiveProjectHandler } from '@/handler/archiveProject';
+import { ThemedText } from '@/components/ThemedText';
+import { getCompletedTasksCount, getTotalTasksCount } from '@/utils/projectUtils';
 
-export default function ProjectMetadata() {
+export default function ProjectDetails() {
     // Go to SignInPage if user is not signed in
     useEffect(() => {
         isAccessTokenValid().then((isValid) => {
@@ -38,25 +40,47 @@ export default function ProjectMetadata() {
             <View style={styles.projectName}>
                 <Text style={styles.projectNameTextInput}>{project?.name ?? PROJECT_NAME_TEXT}</Text>
             </View>
+            <EdittableRichTextBox1NoBoundary
+                style={styles.projectDescription}
+                textInputProps={
+                    {
+                        initialValue: PROJECT_DESCRIPTION_TEXT,
+                        value: description,
+                        onChangeText: setDescription,
+                        multiline: true,
+                        maxLength: MAX_PROJECT_DESCRIPTION_LENGTH,
+                        styles: styles.projectDescriptionTextInput
+                    }}
+            />
             <View style={styles.projectDetailsContainer}>
                 <View style={styles.leftColumnContainer}>
-
+                <View style={styles.createdByContainer}>
+                        <ThemedText type="subtitle">Created By</ThemedText>
+                        <ThemedText type="default">{project?.createdBy}</ThemedText>
+                    </View>
+                    <View style={styles.createdAtContainer}>
+                        <ThemedText type="subtitle">Created At</ThemedText>
+                        <ThemedText type="default">{project?.createdAt.toLocaleString()}</ThemedText>
+                    </View>
+                    <View style={styles.completedTasksCountContainer}>
+                        <ThemedText type="subtitle">Completed Tasks</ThemedText>
+                        <ThemedText type="default">{getCompletedTasksCount(project)}</ThemedText>
+                    </View>
+                    <View style={styles.totalTasksCountContainer}>
+                        <ThemedText type="subtitle">Total Tasks</ThemedText>
+                        <ThemedText type="default">{getTotalTasksCount(project)}</ThemedText>
+                    </View>
                 </View>
                 <View style={styles.rightColumnContainer}>
-
+                    <View style={styles.sharedWithContainer}>
+                        <ThemedText type="subtitle">Shared With</ThemedText>
+                        <ThemedText type="default">{project?.sharedWith?.map((user) => user.name).join(', ')}</ThemedText>
+                    </View>
+                    <View style={styles.dueDateContainer}>
+                        <ThemedText type="subtitle">Due Date</ThemedText>
+                        <ThemedText type="default">{project?.dueDate?.toLocaleString()}</ThemedText>
+                    </View>
                 </View>
-                <EdittableRichTextBox1NoBoundary
-                    style={styles.projectDescription}
-                    textInputProps={
-                        {
-                            initialValue: PROJECT_DESCRIPTION_TEXT,
-                            value: description,
-                            onChangeText: setDescription,
-                            multiline: true,
-                            maxLength: MAX_PROJECT_DESCRIPTION_LENGTH,
-                            styles: styles.projectDescriptionTextInput
-                        }}
-                />
                 <EdittableRichTextBox1NoBoundary
                     style={styles.projectName}
                     textInputProps={
@@ -95,6 +119,7 @@ const styles = StyleSheet.create({
     },
     projectDetailsContainer: {
         flex: 1,
+        display: 'flex',
         flexDirection: 'row',
     },
     leftColumnContainer: {
@@ -107,8 +132,35 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
     },
-    projectDescription: {
+    createdByContainer: {
         flex: 1,
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    createdAtContainer: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    completedTasksCountContainer: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    totalTasksCountContainer: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    sharedWithContainer: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    dueDateContainer: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'row',
     },
     projectName: {
         height: 25,

@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 
 export const projectDetailsHandler = async (projectId: string) => {
     router.push({
-        pathname: '/pages/ProjectMetadata',
+        pathname: '/pages/ProjectDetails',
         params: {
             projectId: projectId
         }
