@@ -5,6 +5,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface ProjectTasksState {
   projects: Record<string, Project>;
   readyThumbnailStateByProjectId: Record<string, boolean>;
+  // Mostly rely on this to get the tasks for a project,
+  // remove eventually the task tracking from the projects above
   tasksByProjectId: Record<string, ProjectTask[]>;
   readyStateByProjectId: Record<string, boolean>;
 }

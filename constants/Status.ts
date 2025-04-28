@@ -1,9 +1,9 @@
 export const Status = {
-    TODO: "todo",
-    IN_PROGRESS: "inprogress",
-    COMPLETED: "completed",
-    CANCELLED: "cancelled",
-    DELETED: "deleted",
+    TODO: "TODO",
+    IN_PROGRESS: "IN_PROGRESS",
+    COMPLETED: "COMPLETED",
+    CANCELLED: "CANCELLED",
+    DELETED: "DELETED",
 } as const;
 
 // This line defines a TypeScript type named 'ProjectStatus' which can be one of the values of the 'ProjectStatus' object.

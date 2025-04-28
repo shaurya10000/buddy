@@ -1,5 +1,5 @@
-import { getFromServer, postJsonToServer } from "@/backend/commons";
-import { ARCHIVE_PROJECT_ENDPOINT, CREATE_PROJECT_ENDPOINT, GET_PROJECTS_ENDPOINT, GET_COMPLETE_PROJECT_ENDPOINT } from "@/backend/config/constants";
+import { getFromServer, postJsonToServer, putJsonToServer } from "@/backend/commons";
+import { ARCHIVE_PROJECT_ENDPOINT, PROJECT_ENDPOINT, GET_PROJECTS_ENDPOINT } from "@/backend/config/constants";
 import { DraftProject } from "@/models/requestModels/DraftProject";
 import { Project } from "@/models/responseModels/Project";
 import { setCommittedProjects, setReadyThumbnailStateByProjectId } from "@/redux/slices/committedProjectTasksSlice";
@@ -43,7 +43,18 @@ export const fetchProjectsWithoutTasks = async (dispatch: Dispatch): Promise<Pro
 
 export const fetchCompleteProject = async (projectId: string): Promise<Project> => {
     try {
-        const response = await getFromServer(GET_COMPLETE_PROJECT_ENDPOINT + "?id=" + projectId);
+        const response = await getFromServer(PROJECT_ENDPOINT + "?id=" + projectId + "&includeTasks=true");
+        const data = await response.json();
+        return data as Project;
+    } catch (error) {
+        console.error('Error fetching project:', error);
+        throw error;
+    }
+};
+
+export const fetchProjectWithoutTasks = async (projectId: string): Promise<Project> => {
+    try {
+        const response = await getFromServer(PROJECT_ENDPOINT + "?id=" + projectId + "&includeTasks=false");
         const data = await response.json();
         return data as Project;
     } catch (error) {
@@ -54,7 +65,7 @@ export const fetchCompleteProject = async (projectId: string): Promise<Project> 
 
 export const createProject = async (project: DraftProject): Promise<Project> => {
     try {
-        const response = await postJsonToServer(CREATE_PROJECT_ENDPOINT, project);
+        const response = await postJsonToServer(PROJECT_ENDPOINT, project);
         const data = await response.json();
         return data as Project;
     } catch (error) {
@@ -63,9 +74,20 @@ export const createProject = async (project: DraftProject): Promise<Project> => 
     }
 };
 
+export const updateProject = async (project: Project): Promise<Project> => {
+    try {
+        const response = await putJsonToServer(PROJECT_ENDPOINT, project);
+        const data = await response.json();
+        return data as Project;
+    } catch (error) {
+        console.error('Error updating project:', error);
+        throw error;
+    }
+};
+
 export const archiveProject = async (projectId: string): Promise<Project> => {
     try {
-        const response = await postJsonToServer(ARCHIVE_PROJECT_ENDPOINT, { projects: [projectId] });
+        const response = await postJsonToServer(ARCHIVE_PROJECT_ENDPOINT, { projectIds: [projectId] });
         const data = await response.json();
         return data as Project;
     } catch (error) {

@@ -33,6 +33,7 @@ export function EdittableRichTextBox1NoBoundary(props: EdittableRichTextBox1NoBo
                     if (props.textInputProps.value === '') {
                         props.textInputProps.onChangeText(initialText);
                     }
+                    props.textInputProps.onBlur?.();
                 }}
                 multiline={props.textInputProps?.multiline ?? false}
                 maxLength={props.textInputProps?.maxLength}

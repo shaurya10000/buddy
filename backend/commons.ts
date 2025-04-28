@@ -1,7 +1,6 @@
 // Common functions for the backend
 
 import { getAccessToken } from "@/localStorage/accessToken";
-import { PROJECTS_ENDPOINT } from "./config/constants";
 
 // Make a GET request with access token to server endpoint
 export const getFromServer = async (endpoint: string) => {
@@ -36,6 +35,27 @@ export const postJsonToServer = async (endpoint: string, body: any) => {
 
     if (!response.ok) {
         throw new Error('Failed to trigger POST to server');
+    }
+    return response;
+}
+
+export const putJsonToServer = async (endpoint: string, body: any) => {
+    const accessToken = await getAccessToken();
+    if (!accessToken) {
+        throw new Error('No access token found');
+    }
+    
+    const response = await fetch(endpoint, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`
+        },
+        body: JSON.stringify(body)
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to trigger PUT to server');
     }
     return response;
 }
