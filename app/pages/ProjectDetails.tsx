@@ -16,6 +16,8 @@ import { formatDate, getCompletedTasksCount, getTotalTasksCount, getSharedWith, 
 import { UneditableStylishTextInBox } from '@/components/UneditableStylishTextInBox';
 import { updateProjectDescriptionHandler } from '@/handler/projectDetails';
 import { ProjectTask } from '@/models/responseModels/ProjectTask';
+import AlertComponent from '@/components/AlertComponent';
+
 export default function ProjectDetails() {
     // Go to SignInPage if user is not signed in
     useEffect(() => {
@@ -118,7 +120,7 @@ export default function ProjectDetails() {
                 />
             </View>
             <ButtonType1 displayText={ARCHIVE_BUTTON_TEXT} style={styles.archiveProjectButton} onPress={() => {
-                archiveProjectHandler(projectId, dispatch);
+                AlertComponent({ projectId, dispatch });
             }} />
         </SafeAreaView>
     );

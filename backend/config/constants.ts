@@ -1,4 +1,4 @@
-const SERVER_ENDPOINT = "http://10.0.0.163:8080/";
+const SERVER_ENDPOINT = "http://10.0.0.91:8080/";
 const PROJECT_ENDPOINT = `${SERVER_ENDPOINT}project`;
 const ARCHIVE_PROJECT_ENDPOINT = `${SERVER_ENDPOINT}project/archive`;
 const GET_PROJECTS_ENDPOINT = `${SERVER_ENDPOINT}projects`;

@@ -39,7 +39,7 @@ export default function ProjectsHome() {
     return (
         <View style={styles.projectsViewHomePageContainer}>
             <View style={styles.projectsContainer}>
-                {projects.map((project, index) => (
+                {projects.filter(project => project.status !== 'archived').map((project, index) => (
                     <Tile key={index} displayText={project.name} color={project.color} onPress={() => {
                         projectHomeHandler(project.id, dispatch);
                     }} />

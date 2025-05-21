@@ -40,7 +40,9 @@ export const formatTime = (date: Date) => {
 };
 
 export const formatDate = (date: Date) => {
-    if (!date) return '';
+    if (!date) {
+        return 'None';
+    }
 
     try {
         // Check if date is a Date object
@@ -55,10 +57,10 @@ export const formatDate = (date: Date) => {
         }
 
         // If conversion fails, return empty string
-        return '';
+        return 'None';
     } catch (error) {
         console.error('Error formatting date:', error);
-        return '';
+        return 'Invalid Date';
     }
 };
 
